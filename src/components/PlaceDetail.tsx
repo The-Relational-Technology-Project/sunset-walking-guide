@@ -129,12 +129,12 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
                 </h2>
                 <div className="flex items-center gap-3">
                   <TimeIndicator layers={place.timeLayers} size="md" />
-                  <span className="text-xs text-muted-foreground">{walkingLine}</span>
+                  <span className="text-sm text-muted-foreground">{walkingLine}</span>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-sm leading-relaxed text-foreground/80">
+              <p className="text-base leading-relaxed text-foreground/90">
                 {place.description}
               </p>
 

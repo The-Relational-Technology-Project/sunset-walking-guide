@@ -26,11 +26,11 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
             <button
               key={id}
               onClick={() => onTabChange(id)}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-3 text-xs transition-colors
-                ${active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/70'}`}
-            >
-              <Icon size={18} strokeWidth={active ? 2 : 1.5} />
-              <span className="text-[10px] tracking-wide">{label}</span>
+            className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs transition-colors
+              min-h-[56px] ${active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/70'}`}
+          >
+            <Icon size={20} strokeWidth={active ? 2.2 : 1.5} />
+            <span className="text-xs tracking-wide font-medium">{label}</span>
             </button>
           );
         })}

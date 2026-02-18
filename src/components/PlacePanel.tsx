@@ -72,7 +72,7 @@ export function PlacePanel({
       : 'translate-x-0 opacity-100';
 
   return (
-    <div className="h-full flex flex-col items-center justify-center px-5 gap-4">
+    <div className="flex-1 flex flex-col items-center justify-center px-5 gap-4 py-4">
       {/* Main panel */}
       <div
         {...handlers}
@@ -106,7 +106,7 @@ export function PlacePanel({
               </h2>
               <div className="flex items-center gap-3">
                 <TimeIndicator layers={place.timeLayers} />
-                <p className="text-xs text-muted-foreground tracking-wide">{walkingLine}</p>
+                <p className="text-sm text-muted-foreground tracking-wide">{walkingLine}</p>
               </div>
             </div>
           </>
@@ -125,7 +125,7 @@ export function PlacePanel({
               <h2 className="serif text-xl font-medium leading-snug text-foreground">
                 {place.name}
               </h2>
-              <p className="text-xs text-muted-foreground tracking-wide">{walkingLine}</p>
+              <p className="text-sm text-muted-foreground tracking-wide">{walkingLine}</p>
               <TimeIndicator layers={place.timeLayers} />
             </div>
           </div>
