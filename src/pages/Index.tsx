@@ -17,6 +17,8 @@ export default function Index() {
   const [userLat, setUserLat] = useState(DEFAULT_CENTER.lat);
   const [userLng, setUserLng] = useState(DEFAULT_CENTER.lng);
   const [locationDenied, setLocationDenied] = useState(false);
+  // 'prompt' = not yet asked, 'denied' = blocked (need settings), 'granted' = ok
+  const [locationPermState, setLocationPermState] = useState<'prompt' | 'granted' | 'denied'>('prompt');
 
   // Navigation state
   const [mainTab, setMainTab] = useState<BottomTab>('explore');
@@ -47,10 +49,11 @@ export default function Index() {
     setActivePlaces(getExplorePlaces());
   }, []);
 
-  // Geolocation — mobile Chrome requires HTTPS and will silently block on HTTP
+  // Geolocation with Permissions API to distinguish prompt vs denied states
   const requestLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setLocationDenied(true);
+      setLocationPermState('denied');
       return;
     }
 
@@ -58,10 +61,13 @@ export default function Index() {
       setUserLat(pos.coords.latitude);
       setUserLng(pos.coords.longitude);
       setLocationDenied(false);
+      setLocationPermState('granted');
     };
 
-    const handleError = () => {
+    const handleError = (err: GeolocationPositionError) => {
       setLocationDenied(true);
+      // PERMISSION_DENIED = 1; other codes = timeout/unavailable (still prompt-able)
+      setLocationPermState(err.code === 1 ? 'denied' : 'prompt');
     };
 
     const opts = { enableHighAccuracy: false, timeout: 12000, maximumAge: 30000 };
@@ -70,9 +76,24 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    // On mobile Chrome, geolocation is blocked on non-HTTPS pages silently.
-    // We always try immediately; if denied, we show a button to re-prompt.
-    requestLocation();
+    // Check permission state first via Permissions API (supported in Chrome/Firefox mobile)
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        setLocationPermState(result.state as 'prompt' | 'granted' | 'denied');
+        if (result.state !== 'denied') {
+          requestLocation();
+        } else {
+          setLocationDenied(true);
+        }
+        result.onchange = () => {
+          setLocationPermState(result.state as 'prompt' | 'granted' | 'denied');
+          if (result.state === 'granted') requestLocation();
+          if (result.state === 'denied') setLocationDenied(true);
+        };
+      });
+    } else {
+      requestLocation();
+    }
   }, [requestLocation]);
 
   // Update explore sort when location changes (only if not in a tour)
@@ -188,18 +209,22 @@ export default function Index() {
           onBackToExplore={activeTour ? handleBackToExplore : undefined}
         />
 
-        {/* Location denied notice */}
+        {/* Location notice */}
         {locationDenied && mainTab === 'explore' && exploreView === 'cards' && (
           <div className="px-5 pb-2 flex items-center gap-3">
             <p className="text-xs text-muted-foreground/70 italic flex-1">
-              Allow location to see what's nearest to you.
+              {locationPermState === 'denied'
+                ? 'Location blocked — enable in your browser settings to see nearby places.'
+                : 'Showing all places — allow location to sort by distance.'}
             </p>
-            <button
-              onClick={requestLocation}
-              className="text-xs text-foreground underline underline-offset-2 shrink-0"
-            >
-              Enable
-            </button>
+            {locationPermState !== 'denied' && (
+              <button
+                onClick={requestLocation}
+                className="text-xs text-foreground underline underline-offset-2 shrink-0"
+              >
+                Enable
+              </button>
+            )}
           </div>
         )}
 
