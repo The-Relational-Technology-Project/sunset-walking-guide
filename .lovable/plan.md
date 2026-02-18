@@ -1,108 +1,69 @@
 
-## Outer Sunset Field Guide
+## Navigation & layout redesign
 
-A calm, mobile-first neighborhood walking companion centered on 48th Avenue & Irving Street in San Francisco's Outer Sunset.
+### What's changing
 
----
+**1. Remove the welcome overlay entirely**
+The `WelcomeOverlay` component and its `localStorage` flag (`osfg_visited`) are removed. Users land directly in Explore mode, already sorted by their location.
 
-### Design system & visual language
+**2. Simplify the header — title only, no context line**
+The `Header` component loses the environmental context line (`getEnvironmentalContext`) and the weather/time display. The title "Outer Sunset Field Guide" gets more vertical breathing room. The Explore · Tour mode toggle moves out of the header and into the bottom nav (see below), so the header becomes a clean title bar only.
 
-- **Palette:** Off-white background, dark charcoal text, muted warm gray accents. No bright colors. A single restrained accent — a faded terra cotta or slate blue — used sparingly.
-- **Typography:** Serif for place names, clean sans-serif for body and UI. Generous line-height, ample white space.
-- **Illustrations:** Small square thumbnails per place in a loose pen-and-ink + watercolor style (as in the reference images), generated as placeholder art. Desaturated, sketch-like, no people.
-- **Motion:** All transitions slow and weighted — page turns, not flicks.
+**3. New bottom navigation — three tabs: Explore, Tour, About**
 
----
+The current `BottomNav` has Map, All stops, About. The new structure:
 
-### Welcome screen (first visit only)
+```
+[ Explore ]  [ Tour ]  [ About ]
+```
 
-- localStorage flag detects first visit
-- Quiet overlay: app name, two-sentence explanation, single "Start exploring" button
-- Requests geolocation; defaults to 48th & Irving if denied
+- **Explore** — the primary tab. Has its own internal sub-navigation (see below).
+- **Tour** — replaces the header toggle; opens the TourList screen exactly as it does today.
+- **About** — unchanged.
 
----
+**4. Explore tab — internal view switcher: Cards / Map / Scan**
 
-### Home — Explore mode
+When the Explore tab is active, a small secondary row appears just below the header (or inline in the header area) offering three view modes:
 
-- **Header:** "Outer Sunset Field Guide" in large type; environmental context line below (e.g. "Foggy Tuesday evening · 6:14 pm")
-- **Mode toggle:** `Explore · Tour` as plain text — Explore active, Tour dimmed
-- **Place panel:** One place at a time, full width. Contains:
-  - Small square sketch thumbnail (upper left)
-  - Place name in medium-weight type
-  - Walking line: "Walk → 3 min · 0.2 mi"
-  - Three-circle time indicator (● ○ ○ / ○ ● ○ / ○ ○ ● and combinations)
-- **Swipe navigation:** Left = next place, right = previous. Weighted, page-turn feel using touch events
-- **Below panel:** Pagination dots · "Swipe to see the next place" hint (first visit) · "Up next: [name] · 0.4 mi" in small type
-- **Sort order:** By distance from user's current location, updated periodically
+```
+Cards  ·  Map  ·  Scan
+```
 
----
+- **Cards** (default) — the current swipe-through PlacePanel experience, now with more vertical room since the context line and mode toggle are gone from the header.
+- **Map** — the current MapView.
+- **Scan** — a compact list (currently called "All stops") showing all places sorted by distance with thumbnail, name, walking distance, and time indicator. Renamed "Scan" to match the navigation language; the AllStops component is reused.
 
-### Tour mode
+**5. More room for place cards in Cards mode**
 
-- Tapping "Tour" opens a simple list screen: four tour options as plain rows
-  - **Past** — historical sites and neighborhood memory
-  - **Present** — open businesses and active community spaces
-  - **Future** — community dreams and planned projects
-  - **Very Local** — the 5–6 nearest places, ~20 min walk
-- Each row: tour name, one-line description, approximate walking time
-- Selecting a tour returns to the same swipe interface with a small "Tour: Past" label and a "Back to explore" text link
+With the context line gone and the mode toggle moved to the bottom nav, the PlacePanel gains significant vertical space. The card itself will grow — thumbnail bumps up from `w-16 h-16` to `w-20 h-20`, place name uses a slightly larger type size, and the card gets more internal padding. The pagination dots and "Up next" line remain below.
 
----
+**6. Tour mode — label stays, back link stays**
 
-### Place detail view
+When a tour is active, a small label ("Tour: Past · Back to explore") appears below the Explore sub-nav, exactly as it does now in the header. Back-to-explore returns to Explore > Cards.
 
-- Slides up calmly from the place panel
-- Slightly larger thumbnail at top with generous margin
-- Place name (large) · time indicator · walking line
-- 2–4 sentence description in warm, neighbor-voice prose
-- **Listen section** (if audio exists): simple play button + duration
-- **Links section** (if links exist): 1–2 plain text outbound links
-- Small map with single pin for this place
-- "Get directions →" link (opens Apple/Google Maps)
+**7. State model changes**
 
----
+- Remove `showWelcome` / `isFirstVisit` state and the `FIRST_VISIT_KEY` constant.
+- Replace `bottomTab: BottomTab` with `mainTab: 'explore' | 'tour' | 'about'`.
+- Add `exploreView: 'cards' | 'map' | 'scan'` state for the explore sub-navigation.
+- The Explore · Tour mode toggle in the header is removed (mode is now `mainTab`).
+- Tour selection sets `mainTab = 'explore'` and `exploreView = 'cards'` as before.
 
-### Bottom navigation (3 items)
+### Files to change
 
-- **Map** — all places as pins; sepia = past, solid = present, outlined/dotted = future; tap pin → detail view
-- **All stops** — compact list: thumbnail · name · distance · time indicator
-- **About** — brief explanation of the project, community credits, terms footer
-
----
-
-### Seed data (10 places)
-
-Real Outer Sunset locations with coordinates, mixed time layers:
-
-| Place | Layer |
+| File | Change |
 |---|---|
-| Playland at the Beach site (48th & Balboa) | Past |
-| Great Highway seawall history | Past |
-| L-Taraval streetcar history | Past |
-| 1900s sand dune development | Past |
-| Black Bird Bookstore & Café (4541 Irving) | Present |
-| Andytown Coffee (Irving location) | Present |
-| Outerlands restaurant | Present |
-| Sunset Branch Library | Present |
-| Ocean Beach | Present + Past |
-| Community gathering space dream (Irving & 47th) | Future |
+| `src/pages/Index.tsx` | Remove welcome state, update tab/mode state, update renderContent logic |
+| `src/components/Header.tsx` | Remove context line, remove mode toggle; render title + explore sub-nav when on explore tab |
+| `src/components/BottomNav.tsx` | New tabs: Explore, Tour, About; updated types |
+| `src/components/PlacePanel.tsx` | Larger thumbnail, more padding, bigger place name |
+| `src/components/WelcomeOverlay.tsx` | Deleted (or simply no longer rendered) |
+| `src/utils/context.ts` | Can remain but no longer imported anywhere |
 
-Each entry includes: name, lat/lng, time layers, short description, placeholder illustration, and select entries have placeholder audio + links.
+### Technical detail
 
----
+The `Header` component will receive `mainTab` and `exploreView` as props, and render the sub-nav row (`Cards · Map · Scan`) only when `mainTab === 'explore'`. This keeps the header small and purposeful.
 
-### Edge states
+The `BottomTab` type becomes `'explore' | 'tour' | 'about'`.
 
-- Out of range: "You've wandered beyond the field guide's range. Head toward the ocean and we'll find you something."
-- Location denied: center on 48th & Irving, small note to enable location
-- No audio / no links: section simply doesn't appear
-
----
-
-### Technical approach
-
-- Mobile-first, 375–430px primary target
-- Hardcoded JSON data (no backend needed for this build)
-- Browser Geolocation API for distance, updated on a timer
-- Touch/swipe gesture support via react-swipeable
-- All UI copy: sentence case, warm, no exclamation points (except "Start exploring")
+No data changes, no new dependencies.
