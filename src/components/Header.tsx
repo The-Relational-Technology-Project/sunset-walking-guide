@@ -11,7 +11,7 @@ interface HeaderProps {
 const EXPLORE_VIEWS: { id: ExploreView; label: string }[] = [
   { id: 'cards', label: 'Nearby' },
   { id: 'map', label: 'Map' },
-  { id: 'scan', label: 'Scan' },
+  { id: 'scan', label: 'All' },
 ];
 
 export function Header({
