@@ -57,7 +57,6 @@ export function PlacePanel({
   });
 
   const place = places[currentIndex];
-  const nextPlace = places[currentIndex + 1];
   if (!place) return null;
 
   const dist = distanceKm(userLat, userLng, place.lat, place.lng);
@@ -122,17 +121,27 @@ export function PlacePanel({
         ))}
       </div>
 
-      {/* Hint + up next */}
-      <div className="text-center space-y-1">
-        {isFirstVisit && (
-          <p className="text-xs text-muted-foreground/60 tracking-wide">
-            Swipe to see the next place
-          </p>
+      {/* Back / Next navigation */}
+      <div className="flex justify-between items-center w-full max-w-[280px]">
+        {currentIndex > 0 ? (
+          <button
+            onClick={goPrev}
+            className="serif text-[11px] tracking-[0.15em] uppercase text-foreground/50 hover:text-foreground/80 transition-colors py-3 px-2 min-h-[44px] flex items-center"
+          >
+            ← Back
+          </button>
+        ) : (
+          <div className="w-16" />
         )}
-        {nextPlace && (
-          <p className="text-xs text-muted-foreground/50">
-            Up next: {nextPlace.name}
-          </p>
+        {currentIndex < places.length - 1 ? (
+          <button
+            onClick={goNext}
+            className="serif text-[11px] tracking-[0.15em] uppercase text-foreground/50 hover:text-foreground/80 transition-colors py-3 px-2 min-h-[44px] flex items-center"
+          >
+            Next →
+          </button>
+        ) : (
+          <div className="w-16" />
         )}
       </div>
     </div>
