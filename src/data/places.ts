@@ -267,6 +267,37 @@ export const PLACES: Place[] = [
       },
     ],
   },
+  // ── New future places ─────────────────────────────────────────────────────
+  {
+    id: 'gas-station-lincoln-laplaya',
+    name: 'New convenience store & gas station',
+    lat: 37.7712,
+    lng: -122.5100,
+    timeLayers: ['future'],
+    description:
+      'A new convenience store and gas station is planned for the corner of Lincoln Way and La Playa Street, replacing an earlier use at the edge of the neighborhood. Plans show a 2,027 sq ft convenience store, a fueling canopy with solar panel provisions, underground storage tanks, and new street trees along La Playa. The project is working its way through approvals.',
+    thumbnail: '/thumbnails/gas-station-plans.png',
+  },
+  {
+    id: 'irving-dunes-walkway',
+    name: 'A path from Irving St to the dunes',
+    lat: 37.7638,
+    lng: -122.5075,
+    timeLayers: ['future'],
+    description:
+      'Right now, the route from Irving Street up into Sunset Dunes is steep, uneven, and inaccessible to anyone who cannot scramble over rocks and mud. Neighbors have long imagined a proper accessible walkway here — a boardwalk or paved path through the native dune plants, with gentle grades and maybe a railing. Nothing has been approved or funded. But the desire is specific, and the current path makes the case for itself.',
+    thumbnail: '/thumbnails/irving-dunes-path-sidebyside.jpg',
+  },
+  {
+    id: 'great-highway-housing',
+    name: '1234 Great Highway housing proposal',
+    lat: 37.7665,
+    lng: -122.5109,
+    timeLayers: ['future'],
+    description:
+      'A large mixed-use housing development has been proposed for 1234 Great Highway, with residential buildings, adult daycare, and ground-floor community uses along La Playa Street. The project has been in the pipeline for years and is now delayed at least another year. When — and whether — it gets built will shape this stretch of the western edge of the city for generations.',
+    thumbnail: '/thumbnails/great-highway-housing.png',
+  },
 ];
 
 // Default center: 48th & Irving
