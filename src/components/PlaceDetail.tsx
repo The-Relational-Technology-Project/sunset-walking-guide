@@ -67,13 +67,18 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
 
         <div className="px-6 pb-10 space-y-6 pt-4">
           {/* Thumbnail */}
-          <div className="w-24 h-24 rounded-sm overflow-hidden bg-muted">
-            <img
-              src={place.thumbnail}
-              alt={place.name}
-              className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
+          <div className="space-y-1">
+            <div className="w-24 h-24 rounded-sm overflow-hidden bg-muted">
+              <img
+                src={place.thumbnail}
+                alt={place.name}
+                className="w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+            </div>
+            {place.photoCredit && (
+              <p className="text-[10px] italic text-muted-foreground/60">Photo: {place.photoCredit}</p>
+            )}
           </div>
 
           {/* Name + meta */}
