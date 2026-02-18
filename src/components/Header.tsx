@@ -33,13 +33,13 @@ export function Header({
             {EXPLORE_VIEWS.map(({ id, label }, i) => (
               <span key={id} className="flex items-center gap-1">
                 {i > 0 && (
-                  <span className="text-muted-foreground/40 text-sm">·</span>
+                  <span className="text-muted-foreground/40 text-base">·</span>
                 )}
                 <button
                   onClick={() => onExploreViewChange(id)}
-                  className={`text-sm transition-colors duration-200 ${
+                  className={`text-base transition-colors duration-200 ${
                     exploreView === id
-                      ? 'text-foreground font-medium'
+                      ? 'text-foreground font-semibold'
                       : 'text-muted-foreground hover:text-foreground/70'
                   }`}
                 >
@@ -51,13 +51,13 @@ export function Header({
 
           {activeTourLabel && (
             <div className="flex items-center gap-3">
-              <span className="text-xs text-muted-foreground italic">
+              <span className="text-sm text-muted-foreground italic">
                 Tour: {activeTourLabel}
               </span>
               {onBackToExplore && (
                 <button
                   onClick={onBackToExplore}
-                  className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+                  className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
                 >
                   Back to explore
                 </button>

@@ -47,9 +47,12 @@ export default function Index() {
     setActivePlaces(getExplorePlaces());
   }, []);
 
-  // Geolocation
-  useEffect(() => {
-    if (!navigator.geolocation) return;
+  // Geolocation — mobile Chrome requires HTTPS and will silently block on HTTP
+  const requestLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      setLocationDenied(true);
+      return;
+    }
 
     const handleSuccess = (pos: GeolocationPosition) => {
       setUserLat(pos.coords.latitude);
@@ -61,19 +64,16 @@ export default function Index() {
       setLocationDenied(true);
     };
 
-    navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
-      enableHighAccuracy: false,
-      timeout: 8000,
-    });
-
-    const watchId = navigator.geolocation.watchPosition(handleSuccess, handleError, {
-      enableHighAccuracy: false,
-      timeout: 10000,
-      maximumAge: 30000,
-    });
-
-    return () => navigator.geolocation.clearWatch(watchId);
+    const opts = { enableHighAccuracy: false, timeout: 12000, maximumAge: 30000 };
+    navigator.geolocation.getCurrentPosition(handleSuccess, handleError, opts);
+    navigator.geolocation.watchPosition(handleSuccess, handleError, opts);
   }, []);
+
+  useEffect(() => {
+    // On mobile Chrome, geolocation is blocked on non-HTTPS pages silently.
+    // We always try immediately; if denied, we show a button to re-prompt.
+    requestLocation();
+  }, [requestLocation]);
 
   // Update explore sort when location changes (only if not in a tour)
   useEffect(() => {
@@ -190,15 +190,21 @@ export default function Index() {
 
         {/* Location denied notice */}
         {locationDenied && mainTab === 'explore' && exploreView === 'cards' && (
-          <div className="px-5 pb-2">
-            <p className="text-xs text-muted-foreground/60 italic">
-              Allow location access to see what's nearest to you.
+          <div className="px-5 pb-2 flex items-center gap-3">
+            <p className="text-xs text-muted-foreground/70 italic flex-1">
+              Allow location to see what's nearest to you.
             </p>
+            <button
+              onClick={requestLocation}
+              className="text-xs text-foreground underline underline-offset-2 shrink-0"
+            >
+              Enable
+            </button>
           </div>
         )}
 
-        {/* Scrollable content area */}
-        <main className="flex-1 flex flex-col pt-2">
+        {/* Scrollable content area — flex-1 + overflow hidden keeps cards vertically centered */}
+        <main className="flex-1 flex flex-col overflow-hidden">
           {renderContent()}
         </main>
 
