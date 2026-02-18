@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 const EXPLORE_VIEWS: { id: ExploreView; label: string }[] = [
-  { id: 'cards', label: 'Cards' },
+  { id: 'cards', label: 'Nearby' },
   { id: 'map', label: 'Map' },
   { id: 'scan', label: 'Scan' },
 ];
