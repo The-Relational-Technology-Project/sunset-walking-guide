@@ -62,7 +62,6 @@ export function PlacePanel({
 
   const dist = distanceKm(userLat, userLng, place.lat, place.lng);
   const walkingLine = formatWalkingLine(dist);
-  const isPast = place.timeLayers.includes('past');
 
   const slideClass =
     animDir === 'left'
@@ -73,63 +72,38 @@ export function PlacePanel({
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-5 gap-4 py-4">
-      {/* Main panel */}
+      {/* Main panel — uniform layout for all places */}
       <div
         {...handlers}
         onClick={() => onOpenDetail(place)}
         className={`
           w-full bg-[hsl(var(--panel-bg))] border border-[hsl(var(--panel-border))]
-          rounded-sm cursor-pointer select-none overflow-hidden
+          rounded-sm p-5 cursor-pointer select-none
           transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
           ${slideClass}
           active:opacity-80
         `}
       >
-        {isPast ? (
-          /* Past / historical: tall image on top, text below */
-          <>
-            <div className="w-full h-56 bg-muted relative">
-              <img
-                src={place.thumbnail}
-                alt={place.name}
-                className="w-full h-full object-cover"
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
-              {/* Zoom hint */}
-              <div className="absolute bottom-2 right-2 bg-background/70 backdrop-blur-sm rounded-sm px-1.5 py-0.5 text-[10px] text-foreground/60 tracking-wide">
-                tap to expand
-              </div>
-            </div>
-            <div className="p-4 space-y-2">
-              <h2 className="serif text-xl font-medium leading-snug text-foreground">
-                {place.name}
-              </h2>
-              <div className="flex items-center gap-3">
-                <TimeIndicator layers={place.timeLayers} />
-                <p className="text-sm text-muted-foreground tracking-wide">{walkingLine}</p>
-              </div>
-            </div>
-          </>
-        ) : (
-          /* Present / future: original side-by-side layout */
-          <div className="flex gap-5 p-5">
-            <div className="flex-shrink-0 w-28 h-28 rounded-sm overflow-hidden bg-muted flex items-center justify-center">
-              <img
-                src={place.thumbnail}
-                alt={place.name}
-                className="w-full h-full object-cover"
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
-            </div>
-            <div className="flex-1 min-w-0 space-y-2.5 py-1">
-              <h2 className="serif text-xl font-medium leading-snug text-foreground">
-                {place.name}
-              </h2>
-              <p className="text-sm text-muted-foreground tracking-wide">{walkingLine}</p>
-              <TimeIndicator layers={place.timeLayers} />
-            </div>
+        <div className="flex gap-5">
+          {/* Thumbnail — fixed square, same size for every card */}
+          <div className="flex-shrink-0 w-28 h-28 rounded-sm overflow-hidden bg-muted">
+            <img
+              src={place.thumbnail}
+              alt={place.name}
+              className="w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
           </div>
-        )}
+
+          {/* Info */}
+          <div className="flex-1 min-w-0 space-y-2.5 py-1">
+            <h2 className="serif text-xl font-medium leading-snug text-foreground">
+              {place.name}
+            </h2>
+            <p className="text-sm text-muted-foreground tracking-wide">{walkingLine}</p>
+            <TimeIndicator layers={place.timeLayers} />
+          </div>
+        </div>
       </div>
 
       {/* Pagination dots */}
