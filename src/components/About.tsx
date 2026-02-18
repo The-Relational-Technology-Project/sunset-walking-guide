@@ -22,7 +22,7 @@ export function About() {
         <h3 className="serif text-sm font-medium text-foreground">The time layers</h3>
         <div className="space-y-2">
           {[
-          { circles: '● ○ ○', label: 'Past', desc: 'Historical sites, old photo locations, demolished landmarks.' },
+          { circles: '● ○ ○', label: 'Past', desc: 'Historical sites, old photo locations, historical podcasts.' },
           { circles: '○ ● ○', label: 'Present', desc: 'Open businesses, active groups, current gathering spaces.' },
           { circles: '○ ○ ●', label: 'Future', desc: 'Community dreams, planned projects, neighbor aspirations.' }].
           map((row) =>
