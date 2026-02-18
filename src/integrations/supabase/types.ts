@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      places: {
+        Row: {
+          audio: Json | null
+          created_at: string
+          description: string
+          id: string
+          lat: number
+          links: Json | null
+          lng: number
+          name: string
+          photo_credit: string | null
+          sort_order: number | null
+          thumbnail: string
+          time_layers: string[]
+          updated_at: string
+        }
+        Insert: {
+          audio?: Json | null
+          created_at?: string
+          description?: string
+          id: string
+          lat: number
+          links?: Json | null
+          lng: number
+          name: string
+          photo_credit?: string | null
+          sort_order?: number | null
+          thumbnail?: string
+          time_layers?: string[]
+          updated_at?: string
+        }
+        Update: {
+          audio?: Json | null
+          created_at?: string
+          description?: string
+          id?: string
+          lat?: number
+          links?: Json | null
+          lng?: number
+          name?: string
+          photo_credit?: string | null
+          sort_order?: number | null
+          thumbnail?: string
+          time_layers?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
