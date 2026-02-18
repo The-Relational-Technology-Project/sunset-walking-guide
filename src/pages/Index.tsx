@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { PLACES, DEFAULT_CENTER, FIELD_GUIDE_RADIUS_KM, Place } from '@/data/places';
 import { distanceKm } from '@/utils/geo';
-import { WelcomeOverlay } from '@/components/WelcomeOverlay';
-import { Header } from '@/components/Header';
+import { Header, ExploreView } from '@/components/Header';
 import { PlacePanel } from '@/components/PlacePanel';
 import { PlaceDetail } from '@/components/PlaceDetail';
 import { TourList, Tour } from '@/components/TourList';
@@ -11,28 +10,21 @@ import { AllStops } from '@/components/AllStops';
 import { About } from '@/components/About';
 import { BottomNav, BottomTab } from '@/components/BottomNav';
 
-const FIRST_VISIT_KEY = 'osfg_visited';
 const LOCATION_HINT_KEY = 'osfg_loc_hint_shown';
 
 export default function Index() {
-  // First-visit welcome
-  const [showWelcome, setShowWelcome] = useState(() => {
-    return !localStorage.getItem(FIRST_VISIT_KEY);
-  });
-  const [isFirstVisit] = useState(() => !localStorage.getItem(FIRST_VISIT_KEY));
-
   // User location
   const [userLat, setUserLat] = useState(DEFAULT_CENTER.lat);
   const [userLng, setUserLng] = useState(DEFAULT_CENTER.lng);
   const [locationDenied, setLocationDenied] = useState(false);
 
-  // Mode / navigation state
-  const [mode, setMode] = useState<'explore' | 'tour'>('explore');
+  // Navigation state
+  const [mainTab, setMainTab] = useState<BottomTab>('explore');
+  const [exploreView, setExploreView] = useState<ExploreView>('cards');
   const [activeTour, setActiveTour] = useState<Tour | null>(null);
   const [activePlaces, setActivePlaces] = useState<Place[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [bottomTab, setBottomTab] = useState<BottomTab>('explore');
 
   // Build sorted explore places
   const getExplorePlaces = useCallback(() => {
@@ -50,13 +42,10 @@ export default function Index() {
     );
   }, [userLat, userLng]);
 
-  // Initialize places
+  // Initialize places on mount
   useEffect(() => {
-    if (mode === 'explore' && !activeTour) {
-      setActivePlaces(getExplorePlaces());
-      setCurrentIndex(0);
-    }
-  }, [mode, activeTour, getExplorePlaces]);
+    setActivePlaces(getExplorePlaces());
+  }, []);
 
   // Geolocation
   useEffect(() => {
@@ -77,7 +66,6 @@ export default function Index() {
       timeout: 8000,
     });
 
-    // Periodic refresh
     const watchId = navigator.geolocation.watchPosition(handleSuccess, handleError, {
       enableHighAccuracy: false,
       timeout: 10000,
@@ -87,87 +75,43 @@ export default function Index() {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  // Update explore sort when location changes
+  // Update explore sort when location changes (only if not in a tour)
   useEffect(() => {
-    if (mode === 'explore' && !activeTour) {
+    if (!activeTour) {
       const sorted = getExplorePlaces();
       setActivePlaces(sorted);
     }
-  }, [userLat, userLng, mode, activeTour, getExplorePlaces]);
-
-  const handleDismissWelcome = () => {
-    localStorage.setItem(FIRST_VISIT_KEY, '1');
-    setShowWelcome(false);
-    setActivePlaces(getExplorePlaces());
-  };
-
-  const handleToggleMode = (newMode: 'explore' | 'tour') => {
-    if (newMode === 'explore') {
-      setMode('explore');
-      setActiveTour(null);
-      setActivePlaces(getExplorePlaces());
-      setCurrentIndex(0);
-      setBottomTab('explore');
-    } else {
-      setMode('tour');
-      setActiveTour(null);
-      setBottomTab('explore');
-    }
-  };
+  }, [userLat, userLng, activeTour, getExplorePlaces]);
 
   const handleSelectTour = (tour: Tour, places: Place[]) => {
     setActiveTour(tour);
     setActivePlaces(places);
     setCurrentIndex(0);
-    setMode('explore'); // return to swipe view
-    setBottomTab('explore');
+    setMainTab('explore');
+    setExploreView('cards');
   };
 
   const handleBackToExplore = () => {
-    setMode('explore');
     setActiveTour(null);
     setActivePlaces(getExplorePlaces());
     setCurrentIndex(0);
+    setExploreView('cards');
   };
 
-  const handleBottomTab = (tab: BottomTab) => {
-    setBottomTab(tab);
-    // Switching to explore tab returns to swipe UI
-    if (tab === 'explore') {
-      // no-op, stays in current mode
-    }
+  const handleMainTab = (tab: BottomTab) => {
+    setMainTab(tab);
+    // Switching away from tour tab resets nothing; switching to explore keeps current view
   };
 
   const isOutOfRange = !inRange() && !locationDenied;
 
-  // Render main content based on tab / mode
+  // Render main content
   const renderContent = () => {
-    if (bottomTab === 'map') {
-      return (
-        <MapView
-          places={PLACES}
-          userLat={userLat}
-          userLng={userLng}
-          onOpenDetail={setSelectedPlace}
-        />
-      );
-    }
-    if (bottomTab === 'stops') {
-      return (
-        <AllStops
-          places={PLACES}
-          userLat={userLat}
-          userLng={userLng}
-          onOpenDetail={setSelectedPlace}
-        />
-      );
-    }
-    if (bottomTab === 'about') {
+    if (mainTab === 'about') {
       return <About />;
     }
 
-    // Default: explore tab
-    if (mode === 'tour' && !activeTour) {
+    if (mainTab === 'tour') {
       return (
         <TourList
           allPlaces={PLACES}
@@ -178,6 +122,30 @@ export default function Index() {
       );
     }
 
+    // Explore tab
+    if (exploreView === 'map') {
+      return (
+        <MapView
+          places={PLACES}
+          userLat={userLat}
+          userLng={userLng}
+          onOpenDetail={setSelectedPlace}
+        />
+      );
+    }
+
+    if (exploreView === 'scan') {
+      return (
+        <AllStops
+          places={PLACES}
+          userLat={userLat}
+          userLng={userLng}
+          onOpenDetail={setSelectedPlace}
+        />
+      );
+    }
+
+    // Cards view (default)
     if (isOutOfRange) {
       return (
         <div className="px-6 py-10 text-center">
@@ -197,7 +165,7 @@ export default function Index() {
         userLng={userLng}
         onIndexChange={setCurrentIndex}
         onOpenDetail={setSelectedPlace}
-        isFirstVisit={isFirstVisit}
+        isFirstVisit={false}
       />
     );
   };
@@ -212,17 +180,16 @@ export default function Index() {
       />
 
       <div className="min-h-dvh flex flex-col bg-background pb-20">
-        {showWelcome && <WelcomeOverlay onDismiss={handleDismissWelcome} />}
-
         <Header
-          activeMode={mode}
-          onToggleMode={handleToggleMode}
-          tourLabel={activeTour?.name}
+          mainTab={mainTab}
+          exploreView={exploreView}
+          onExploreViewChange={setExploreView}
+          activeTourLabel={activeTour?.name}
           onBackToExplore={activeTour ? handleBackToExplore : undefined}
         />
 
         {/* Location denied notice */}
-        {locationDenied && bottomTab === 'explore' && (
+        {locationDenied && mainTab === 'explore' && exploreView === 'cards' && (
           <div className="px-5 pb-2">
             <p className="text-xs text-muted-foreground/60 italic">
               Allow location access to see what's nearest to you.
@@ -235,7 +202,7 @@ export default function Index() {
           {renderContent()}
         </main>
 
-        <BottomNav activeTab={bottomTab} onTabChange={handleBottomTab} />
+        <BottomNav activeTab={mainTab} onTabChange={handleMainTab} />
 
         {/* Place detail sheet */}
         {selectedPlace && (

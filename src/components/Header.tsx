@@ -1,65 +1,68 @@
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { getEnvironmentalContext, getContextRefreshMs } from '@/utils/context';
+export type ExploreView = 'cards' | 'map' | 'scan';
 
 interface HeaderProps {
-  onToggleMode: (mode: 'explore' | 'tour') => void;
-  activeMode: 'explore' | 'tour';
-  tourLabel?: string;
+  mainTab: 'explore' | 'tour' | 'about';
+  exploreView: ExploreView;
+  onExploreViewChange: (view: ExploreView) => void;
+  activeTourLabel?: string;
   onBackToExplore?: () => void;
 }
 
-export function Header({ onToggleMode, activeMode, tourLabel, onBackToExplore }: HeaderProps) {
-  const [context, setContext] = useState(() => getEnvironmentalContext());
+const EXPLORE_VIEWS: { id: ExploreView; label: string }[] = [
+  { id: 'cards', label: 'Cards' },
+  { id: 'map', label: 'Map' },
+  { id: 'scan', label: 'Scan' },
+];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setContext(getEnvironmentalContext());
-    }, getContextRefreshMs());
-    return () => clearInterval(interval);
-  }, []);
-
+export function Header({
+  mainTab,
+  exploreView,
+  onExploreViewChange,
+  activeTourLabel,
+  onBackToExplore,
+}: HeaderProps) {
   return (
-    <header className="px-6 pt-8 pb-4 space-y-1">
+    <header className="px-6 pt-10 pb-3 space-y-4">
       <h1 className="serif text-2xl font-medium leading-tight text-foreground tracking-tight">
         Outer Sunset Field Guide
       </h1>
-      <p className="text-xs text-muted-foreground tracking-wide">{context}</p>
 
-      <div className="pt-3 flex items-center gap-1">
-        <button
-          onClick={() => onToggleMode('explore')}
-          className={`text-sm transition-colors duration-200 ${
-            activeMode === 'explore'
-              ? 'text-foreground font-medium'
-              : 'text-muted-foreground hover:text-foreground/70'
-          }`}
-        >
-          Explore
-        </button>
-        <span className="text-muted-foreground/40 text-sm px-0.5">·</span>
-        <button
-          onClick={() => onToggleMode('tour')}
-          className={`text-sm transition-colors duration-200 ${
-            activeMode === 'tour'
-              ? 'text-foreground font-medium'
-              : 'text-muted-foreground hover:text-foreground/70'
-          }`}
-        >
-          Tour
-        </button>
-      </div>
+      {mainTab === 'explore' && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-1">
+            {EXPLORE_VIEWS.map(({ id, label }, i) => (
+              <span key={id} className="flex items-center gap-1">
+                {i > 0 && (
+                  <span className="text-muted-foreground/40 text-sm">·</span>
+                )}
+                <button
+                  onClick={() => onExploreViewChange(id)}
+                  className={`text-sm transition-colors duration-200 ${
+                    exploreView === id
+                      ? 'text-foreground font-medium'
+                      : 'text-muted-foreground hover:text-foreground/70'
+                  }`}
+                >
+                  {label}
+                </button>
+              </span>
+            ))}
+          </div>
 
-      {tourLabel && (
-        <div className="flex items-center gap-3 pt-1">
-          <span className="text-xs text-muted-foreground italic">Tour: {tourLabel}</span>
-          {onBackToExplore && (
-            <button
-              onClick={onBackToExplore}
-              className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
-            >
-              Back to explore
-            </button>
+          {activeTourLabel && (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground italic">
+                Tour: {activeTourLabel}
+              </span>
+              {onBackToExplore && (
+                <button
+                  onClick={onBackToExplore}
+                  className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+                >
+                  Back to explore
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}

@@ -86,7 +86,7 @@ export function PlacePanel({
       >
         <div className="flex gap-4">
           {/* Thumbnail */}
-          <div className="flex-shrink-0 w-16 h-16 rounded-sm overflow-hidden bg-muted flex items-center justify-center">
+          <div className="flex-shrink-0 w-20 h-20 rounded-sm overflow-hidden bg-muted flex items-center justify-center">
             <img
               src={place.thumbnail}
               alt={place.name}
@@ -99,8 +99,8 @@ export function PlacePanel({
           </div>
 
           {/* Info */}
-          <div className="flex-1 min-w-0 space-y-1.5">
-            <h2 className="serif text-base font-medium leading-snug text-foreground">
+          <div className="flex-1 min-w-0 space-y-2">
+            <h2 className="serif text-lg font-medium leading-snug text-foreground">
               {place.name}
             </h2>
             <p className="text-xs text-muted-foreground tracking-wide">{walkingLine}</p>
