@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
-import { PLACES, DEFAULT_CENTER, FIELD_GUIDE_RADIUS_KM, Place } from '@/data/places';
+import { DEFAULT_CENTER, FIELD_GUIDE_RADIUS_KM, Place } from '@/data/places';
 import { distanceKm } from '@/utils/geo';
+import { usePlaces } from '@/hooks/usePlaces';
 import { Header, ExploreView } from '@/components/Header';
 import { PlacePanel } from '@/components/PlacePanel';
 import { PlaceDetail } from '@/components/PlaceDetail';
@@ -13,6 +14,8 @@ import { BottomNav, BottomTab } from '@/components/BottomNav';
 const LOCATION_HINT_KEY = 'osfg_loc_hint_shown';
 
 export default function Index() {
+  const { data: allPlaces = [] } = usePlaces();
+
   // User location
   const [userLat, setUserLat] = useState(DEFAULT_CENTER.lat);
   const [userLng, setUserLng] = useState(DEFAULT_CENTER.lng);
@@ -30,24 +33,26 @@ export default function Index() {
 
   // Build sorted explore places
   const getExplorePlaces = useCallback(() => {
-    return [...PLACES].sort(
+    return [...allPlaces].sort(
       (a, b) =>
         distanceKm(userLat, userLng, a.lat, a.lng) -
         distanceKm(userLat, userLng, b.lat, b.lng)
     );
-  }, [userLat, userLng]);
+  }, [allPlaces, userLat, userLng]);
 
   // Check if user is in range
   const inRange = useCallback(() => {
-    return PLACES.some(
+    return allPlaces.some(
       (p) => distanceKm(userLat, userLng, p.lat, p.lng) <= FIELD_GUIDE_RADIUS_KM * 2
     );
-  }, [userLat, userLng]);
+  }, [allPlaces, userLat, userLng]);
 
-  // Initialize places on mount
+  // Update explore sort whenever places load or location changes
   useEffect(() => {
-    setActivePlaces(getExplorePlaces());
-  }, []);
+    if (!activeTour && allPlaces.length > 0) {
+      setActivePlaces(getExplorePlaces());
+    }
+  }, [allPlaces, userLat, userLng]);
 
   // Geolocation with Permissions API to distinguish prompt vs denied states
   const requestLocation = useCallback(() => {
@@ -96,14 +101,6 @@ export default function Index() {
     }
   }, [requestLocation]);
 
-  // Update explore sort when location changes (only if not in a tour)
-  useEffect(() => {
-    if (!activeTour) {
-      const sorted = getExplorePlaces();
-      setActivePlaces(sorted);
-    }
-  }, [userLat, userLng, activeTour, getExplorePlaces]);
-
   const handleSelectTour = (tour: Tour, places: Place[]) => {
     setActiveTour(tour);
     setActivePlaces(places);
@@ -135,7 +132,7 @@ export default function Index() {
     if (mainTab === 'tour') {
       return (
         <TourList
-          allPlaces={PLACES}
+          allPlaces={allPlaces}
           userLat={userLat}
           userLng={userLng}
           onSelectTour={handleSelectTour}
@@ -147,7 +144,7 @@ export default function Index() {
     if (exploreView === 'map') {
       return (
         <MapView
-          places={PLACES}
+          places={allPlaces}
           userLat={userLat}
           userLng={userLng}
           onOpenDetail={setSelectedPlace}
@@ -158,7 +155,7 @@ export default function Index() {
     if (exploreView === 'scan') {
       return (
         <AllStops
-          places={PLACES}
+          places={allPlaces}
           userLat={userLat}
           userLng={userLng}
           onOpenDetail={setSelectedPlace}
