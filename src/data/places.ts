@@ -298,6 +298,169 @@ export const PLACES: Place[] = [
       'A large mixed-use housing development has been proposed for 1234 Great Highway, with residential buildings, adult daycare, and ground-floor community uses along La Playa Street. The project has been in the pipeline for years and is now delayed at least another year. When — and whether — it gets built will shape this stretch of the western edge of the city for generations.',
     thumbnail: '/thumbnails/great-highway-housing.png',
   },
+  // ── Local businesses ───────────────────────────────────────────────────────
+  {
+    id: 'sukis-hair-salon',
+    name: "Suki's Hair Salon",
+    lat: 37.7601,
+    lng: -122.5050,
+    timeLayers: ['present'],
+    description:
+      "A neighborhood salon at the far western edge of the Sunset. ADS — the African Diaspora Society — has been the backdrop here for years, making Suki's about more than haircuts. Community is the operating principle. It sits at 48th and Judah, one block from the ocean, and has the feel of a place that knows exactly who it is.",
+    thumbnail: '/placeholder.svg',
+  },
+  {
+    id: 'other-avenues',
+    name: 'Other Avenues',
+    lat: 37.7601,
+    lng: -122.5053,
+    timeLayers: ['present'],
+    description:
+      "A worker-owned grocery cooperative on Judah Street that has been feeding the Outer Sunset since 1974. Other Avenues runs entirely on the principle that a neighborhood store should belong to the people who use it. The bulk bins, the local produce, the familiar faces behind the counter — it all adds up to something that feels like a different kind of economy.",
+    thumbnail: '/placeholder.svg',
+    links: [
+      {
+        label: 'Other Avenues Food Co-op',
+        url: 'https://www.otheravenues.com',
+      },
+    ],
+  },
+  {
+    id: 'hook-fish',
+    name: 'Hook Fish Co.',
+    lat: 37.7638,
+    lng: -122.5038,
+    timeLayers: ['present'],
+    description:
+      'A small seafood counter on Irving Street that sources directly from local fishing boats — often that morning. The menu changes with the catch. Hook Fish is one of the few places in the city where the supply chain from ocean to plate is genuinely short. Lines form on weekend afternoons. The fish tacos have a quiet but devoted following.',
+    thumbnail: '/placeholder.svg',
+    links: [
+      {
+        label: 'Hook Fish Co.',
+        url: 'https://www.hookfishco.com',
+      },
+    ],
+  },
+  {
+    id: 'rubys-judah',
+    name: "Ruby's",
+    lat: 37.7601,
+    lng: -122.5025,
+    timeLayers: ['present'],
+    description:
+      'A neighborhood bar on Judah Street that has been a quiet anchor for years. Not loud, not trying to be anything other than what it is. Pool table, cold beer, regulars who know each other by name. The kind of place that keeps a neighborhood feeling like a neighborhood.',
+    thumbnail: '/placeholder.svg',
+  },
+  {
+    id: 'java-beach-cafe',
+    name: 'Java Beach Cafe',
+    lat: 37.7601,
+    lng: -122.5087,
+    timeLayers: ['present'],
+    description:
+      'At the intersection of Judah and La Playa — the last block before the ocean — Java Beach has been serving coffee to surfers, dog walkers, and everyone in between since 1995. You can see the dunes from the window. The location is part of the experience.',
+    thumbnail: '/placeholder.svg',
+    links: [
+      {
+        label: 'Java Beach Cafe',
+        url: 'https://www.javabeachcafe.com',
+      },
+    ],
+  },
+  // ── Community spaces ───────────────────────────────────────────────────────
+  {
+    id: 'sealevel-space',
+    name: 'Sealevel Community Space',
+    lat: 37.7638,
+    lng: -122.5013,
+    timeLayers: ['present'],
+    description:
+      'A small community space on Irving Street near 45th Avenue, run by neighbors and for neighbors. Hosts workshops, film screenings, organizing meetings, and conversations that do not fit anywhere else. Has the energy of a place that believes the neighborhood can imagine itself differently.',
+    thumbnail: '/placeholder.svg',
+  },
+  {
+    id: 'chisholm-village-cc',
+    name: 'Shirley Chisholm Village Community Center',
+    lat: 37.7665,
+    lng: -122.5100,
+    timeLayers: ['present'],
+    description:
+      'A new community center opening soon as part of the Shirley Chisholm Village affordable housing development — named for the trailblazing congresswoman and first Black woman to run for a major party presidential nomination. The center will serve residents of the new development and the surrounding neighborhood. Something is being built here that is worth paying attention to.',
+    thumbnail: '/placeholder.svg',
+  },
+  {
+    id: 'ortega-library',
+    name: 'Ortega Branch Library',
+    lat: 37.7557,
+    lng: -122.4700,
+    timeLayers: ['present'],
+    description:
+      "A branch of the San Francisco Public Library tucked into the Inner Sunset on Ortega Street. Smaller than the main Sunset branch on Irving but no less essential. Kids come after school. There are always a few people just sitting and reading, which is exactly what a library is for. Free, open, and always there.",
+    thumbnail: '/placeholder.svg',
+    links: [
+      {
+        label: 'SFPL Ortega Branch',
+        url: 'https://sfpl.org/locations/ortega',
+      },
+    ],
+  },
+  {
+    id: 'far-west-garden',
+    name: 'Far West Community Garden',
+    lat: 37.7601,
+    lng: -122.4988,
+    timeLayers: ['present'],
+    description:
+      'A community garden at Judah and 43rd Avenue, tended by neighbors who grow vegetables, flowers, and something harder to name — a sense of shared responsibility for a small patch of earth. Garden plots, compost, and the quiet satisfaction of a corner that belongs to everyone.',
+    thumbnail: '/placeholder.svg',
+  },
+  {
+    id: 'blue-boat-playground',
+    name: 'Blue Boat Playground',
+    lat: 37.7712,
+    lng: -122.5013,
+    timeLayers: ['present'],
+    description:
+      'A neighborhood playground near Lincoln Way and 45th Avenue, beloved for its blue boat structure that has anchored the play space for years. The kind of playground that gets worn smooth with use. Kids have been claiming it as their territory for a long time. Parents push strollers here. It is a good place.',
+    thumbnail: '/placeholder.svg',
+  },
+  // ── Art ────────────────────────────────────────────────────────────────────
+  {
+    id: 'sunset-dunes-art',
+    name: 'Public art at Sunset Dunes',
+    lat: 37.7638,
+    lng: -122.5087,
+    timeLayers: ['present'],
+    description:
+      'A rotating public art installation near the entrance to Sunset Dunes at Irving Street. The works change with the artists and the seasons. Standing between the neighborhood grid and the open dunes, the art has the widest possible sky as its backdrop — an unusual condition that tends to make even modest work feel significant.',
+    thumbnail: '/placeholder.svg',
+  },
+  {
+    id: 'last-straw',
+    name: 'The Last Straw',
+    lat: 37.7638,
+    lng: -122.5038,
+    timeLayers: ['present'],
+    description:
+      "A public artwork on Irving Street at 47th Avenue, made from salvaged and natural materials, taking its name from the neighborhood's ongoing relationship with environmental pressure and change. It has become a quiet landmark — the kind of thing people pause at without knowing quite why, then carry with them.",
+    thumbnail: '/placeholder.svg',
+  },
+  {
+    id: 'case-for-making',
+    name: 'Case for Making',
+    lat: 37.7601,
+    lng: -122.5025,
+    timeLayers: ['present'],
+    description:
+      'A studio, school, and community workshop on Judah Street where people come to build things with their hands. Classes in ceramics, woodworking, and other crafts. The idea is that making things by hand is important — not as a hobby, but as a way of being in the world. The neighborhood supports it.',
+    thumbnail: '/placeholder.svg',
+    links: [
+      {
+        label: 'Case for Making',
+        url: 'https://www.caseformaking.com',
+      },
+    ],
+  },
 ];
 
 // Default center: 48th & Irving
