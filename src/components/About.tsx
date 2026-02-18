@@ -23,7 +23,7 @@ export function About() {
         <div className="space-y-2">
           {[
           { circles: '● ○ ○', label: 'Past', desc: 'Historical sites, old photo locations, historical podcasts.' },
-          { circles: '○ ● ○', label: 'Present', desc: 'Open businesses, active groups, current gathering spaces.' },
+          { circles: '○ ● ○', label: 'Present', desc: 'Local businesses, art, and gathering spaces.' },
           { circles: '○ ○ ●', label: 'Future', desc: 'Community dreams, planned projects, neighbor aspirations.' }].
           map((row) =>
           <div key={row.label} className="flex items-start gap-3">
