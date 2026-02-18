@@ -1,15 +1,15 @@
-import { Map, List, Info } from 'lucide-react';
+import { Compass, Map, Info } from 'lucide-react';
 
-export type BottomTab = 'explore' | 'map' | 'stops' | 'about';
+export type BottomTab = 'explore' | 'tour' | 'about';
 
 interface BottomNavProps {
   activeTab: BottomTab;
   onTabChange: (tab: BottomTab) => void;
 }
 
-const TABS: { id: BottomTab; label: string; Icon: typeof Map }[] = [
-  { id: 'map', label: 'Map', Icon: Map },
-  { id: 'stops', label: 'All stops', Icon: List },
+const TABS: { id: BottomTab; label: string; Icon: typeof Compass }[] = [
+  { id: 'explore', label: 'Explore', Icon: Compass },
+  { id: 'tour', label: 'Tour', Icon: Map },
   { id: 'about', label: 'About', Icon: Info },
 ];
 
@@ -21,9 +21,6 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
     >
       <div className="flex items-stretch">
         {TABS.map(({ id, label, Icon }) => {
-          const isActive =
-            activeTab === id || (id === 'map' && activeTab === 'explore');
-          // We won't highlight "map" when in explore, because explore uses a full swipe UI
           const active = activeTab === id;
           return (
             <button
