@@ -71,22 +71,22 @@ export function PlacePanel({
       : 'translate-x-0 opacity-100';
 
   return (
-    <div className="px-5 flex flex-col gap-4">
+    <div className="h-full flex flex-col items-center justify-center px-5 gap-5">
       {/* Main panel */}
       <div
         {...handlers}
         onClick={() => onOpenDetail(place)}
         className={`
-          bg-[hsl(var(--panel-bg))] border border-[hsl(var(--panel-border))]
+          w-full bg-[hsl(var(--panel-bg))] border border-[hsl(var(--panel-border))]
           rounded-sm p-5 cursor-pointer select-none
           transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
           ${slideClass}
           active:opacity-80
         `}
       >
-        <div className="flex gap-4">
+        <div className="flex gap-5">
           {/* Thumbnail */}
-          <div className="flex-shrink-0 w-20 h-20 rounded-sm overflow-hidden bg-muted flex items-center justify-center">
+          <div className="flex-shrink-0 w-28 h-28 rounded-sm overflow-hidden bg-muted flex items-center justify-center">
             <img
               src={place.thumbnail}
               alt={place.name}
@@ -99,8 +99,8 @@ export function PlacePanel({
           </div>
 
           {/* Info */}
-          <div className="flex-1 min-w-0 space-y-2">
-            <h2 className="serif text-lg font-medium leading-snug text-foreground">
+          <div className="flex-1 min-w-0 space-y-2.5 py-1">
+            <h2 className="serif text-xl font-medium leading-snug text-foreground">
               {place.name}
             </h2>
             <p className="text-xs text-muted-foreground tracking-wide">{walkingLine}</p>
@@ -110,7 +110,7 @@ export function PlacePanel({
       </div>
 
       {/* Pagination dots */}
-      <div className="flex items-center justify-center gap-1.5 py-1">
+      <div className="flex items-center justify-center gap-1.5">
         {places.map((_, i) => (
           <button
             key={i}
@@ -126,7 +126,7 @@ export function PlacePanel({
       </div>
 
       {/* Hint + up next */}
-      <div className="text-center space-y-1 pb-1">
+      <div className="text-center space-y-1">
         {isFirstVisit && (
           <p className="text-xs text-muted-foreground/60 tracking-wide">
             Swipe to see the next place
