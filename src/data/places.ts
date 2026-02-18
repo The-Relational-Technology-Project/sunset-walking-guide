@@ -8,6 +8,7 @@ export interface Place {
   timeLayers: TimeLayer[];
   description: string;
   thumbnail: string;
+  photoCredit?: string;
   audio?: {
     url: string;
     duration: string;
@@ -54,13 +55,25 @@ export const PLACES: Place[] = [
   },
   {
     id: 'l-taraval',
-    name: 'L-Taraval streetcar line',
-    lat: 37.7445,
-    lng: -122.4812,
+    name: 'N-Judah at 46th Avenue',
+    lat: 37.7638,
+    lng: -122.5038,
     timeLayers: ['past', 'present'],
     description:
       'The L-Taraval has connected the Outer Sunset to downtown since 1919. At its peak it carried tens of thousands of riders a day. The route runs along Taraval Street, past fog-dusted storefronts and neighbors who have ridden it their whole lives. It is slower than it used to be. People still read on it, sleep on it, think on it.',
-    thumbnail: '/thumbnails/l-taraval.jpg',
+    thumbnail: '/thumbnails/judah-46th-1948.jpg',
+    photoCredit: 'outsidelands.org',
+    audio: {
+      url: 'https://www.outsidelands.org/podcast/WNP175_Ron_Jones',
+      duration: '',
+      label: 'Ron Jones: growing up on 46th Avenue',
+    },
+    links: [
+      {
+        label: 'Ron Jones and Life in the Sunset — WNP Podcast',
+        url: 'https://www.outsidelands.org/podcast/WNP175_Ron_Jones',
+      },
+    ],
   },
   {
     id: 'sand-dunes',
@@ -70,7 +83,8 @@ export const PLACES: Place[] = [
     timeLayers: ['past'],
     description:
       'Before the grid, before the houses, before the streets, there were just dunes. The western half of San Francisco was blowing sand, shifting with every season. In the late 1800s and early 1900s, the city planted hundreds of thousands of trees and stabilized the dunes to make the Sunset District possible. The neighborhood you are standing in was built on sand memory.',
-    thumbnail: '/thumbnails/sand-dunes.jpg',
+    thumbnail: '/thumbnails/sand-dunes-aerial.jpg',
+    photoCredit: 'outsidelands.org',
   },
   {
     id: 'black-bird',
@@ -149,7 +163,8 @@ export const PLACES: Place[] = [
     timeLayers: ['past', 'present'],
     description:
       'The western edge of the city, and the place everything in this guide orbits. People have gathered here forever, long before the city existed, long before the seawall or the highway. Today it is surfers and dog walkers and people staring at the horizon. The water is cold. The fog is frequent. It is one of the most honest places in San Francisco.',
-    thumbnail: '/thumbnails/ocean-beach.jpg',
+    thumbnail: '/thumbnails/ocean-beach-rescue.jpg',
+    photoCredit: 'outsidelands.org',
     audio: {
       url: '',
       duration: '2:04',
@@ -165,6 +180,92 @@ export const PLACES: Place[] = [
     description:
       'For years, neighbors have talked about this corner as a place that could hold something more. A small plaza, a permanent farmers market, a place to sit and watch the fog roll in from the ocean. Nothing has been built here yet. The dream is specific: shade trees, a simple bench, a reason to stop. Some dreams take time. This one is patient.',
     thumbnail: '/thumbnails/irving-gathering.jpg',
+  },
+  // ── New historical places ──────────────────────────────────────────────────
+  {
+    id: 'carville',
+    name: 'Carville & St. Andrew by the Sea',
+    lat: 37.7638,
+    lng: -122.5090,
+    timeLayers: ['past'],
+    description:
+      'In the 1890s, retired streetcar bodies were dragged out here and converted into homes — a whole neighborhood of repurposed transit cars lined the beach edge along La Playa. They called it Carville. The St. Andrew by the Sea Church stood nearby at 1338 47th Avenue, built in 1908. Most of the car-homes are long gone, but the idea of it — neighbors hauling transit cars to the sand and making a life — stays with you.',
+    thumbnail: '/thumbnails/carville-st-andrew.jpg',
+    photoCredit: 'outsidelands.org',
+    links: [
+      {
+        label: 'Carville history — Western Neighborhoods Project',
+        url: 'https://www.outsidelands.org/carville.php',
+      },
+      {
+        label: 'Great Highway Podcast Ep. 470',
+        url: 'https://www.outsidelands.org/podcast/470',
+      },
+    ],
+  },
+  {
+    id: 'surf-theatre',
+    name: 'The Surf Theatre',
+    lat: 37.7638,
+    lng: -122.5038,
+    timeLayers: ['past'],
+    description:
+      'The Surf Theatre opened in 1926 as the Parkview, became the Sunset Theatre in 1937, and finally the Surf in 1957. It was a neighborhood cinema that showed foreign and art films — "a little beacon of culture out there in the Outer Sunset." Part of the Levin family\'s west-side theatre chain. It closed July 7, 1985. The building still stands.',
+    thumbnail: '/thumbnails/surf-theatre.jpg',
+    photoCredit: 'outsidelands.org',
+    links: [
+      {
+        label: 'Surf Theatre history — Western Neighborhoods Project',
+        url: 'https://www.outsidelands.org/surf-theatre.php',
+      },
+      {
+        label: 'WNP Podcast Ep. 8',
+        url: 'https://www.outsidelands.org/podcast/8',
+      },
+    ],
+  },
+  {
+    id: 'irving-1917',
+    name: 'Irving Street, 1917',
+    lat: 37.7638,
+    lng: -122.5038,
+    timeLayers: ['past'],
+    description:
+      'In 1917 this block of Irving was all dirt, pipe trenches, and possibility. The streetcar tracks were being laid, utilities were going in, and the neighborhood was deciding what it wanted to be. The houses on either side were already there, watching the work. This photo was taken looking east from the beach end of Irving.',
+    thumbnail: '/thumbnails/irving-1917.jpg',
+    photoCredit: 'outsidelands.org',
+  },
+  {
+    id: 'lincoln-early',
+    name: '48th & Lincoln: early settlement',
+    lat: 37.7712,
+    lng: -122.5090,
+    timeLayers: ['past'],
+    description:
+      'Around 1905, this corner of the far Outer Sunset was mostly dunes and a few scattered shacks. Early settlers built right at the edge of what the city called livable — some structures on stilts, some half-buried in sand. The windmill in the distance pumped water to Golden Gate Park. This was the frontier end of San Francisco.',
+    thumbnail: '/thumbnails/lincoln-early.jpg',
+    photoCredit: 'outsidelands.org',
+  },
+  {
+    id: 'carville-great-highway',
+    name: 'Carville on the Great Highway',
+    lat: 37.7638,
+    lng: -122.5109,
+    timeLayers: ['past'],
+    description:
+      'This postcard from January 1910 shows Carville in its full strange glory — retired streetcar bodies lined up along the Great Highway, a windmill pumping water in the background, a horse-drawn carriage in the foreground. The handwritten inscription reads "Carville, Ocean Beach, San Francisco." It looks like the edge of the world because it was.',
+    thumbnail: '/thumbnails/carville-great-highway.jpg',
+    photoCredit: 'outsidelands.org',
+    links: [
+      {
+        label: 'Carville history — Western Neighborhoods Project',
+        url: 'https://www.outsidelands.org/carville.php',
+      },
+      {
+        label: 'Great Highway Podcast Ep. 468',
+        url: 'https://www.outsidelands.org/podcast/468',
+      },
+    ],
   },
 ];
 
