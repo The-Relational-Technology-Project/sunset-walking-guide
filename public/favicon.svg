@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" rx="10" fill="#f7f4f0"/>
+  <!-- Compass circle -->
+  <circle cx="32" cy="30" r="20" stroke="#2e261e" stroke-width="1.5" fill="none"/>
+  <!-- N point (tall) -->
+  <polygon points="32,10 34,27 32,24 30,27" fill="#2e261e"/>
+  <!-- S point (tall) -->
+  <polygon points="32,50 34,33 32,36 30,33" fill="#2e261e"/>
+  <!-- E point -->
+  <polygon points="52,30 35,28 38,30 35,32" fill="#2e261e"/>
+  <!-- W point -->
+  <polygon points="12,30 29,28 26,30 29,32" fill="#2e261e"/>
+  <!-- NE diagonal -->
+  <polygon points="46,16 35,28 36,26 34,27" fill="#c4714a" opacity="0.85"/>
+  <!-- SW diagonal -->
+  <polygon points="18,44 29,32 28,34 30,33" fill="#c4714a" opacity="0.85"/>
+  <!-- NW diagonal -->
+  <polygon points="18,16 29,28 28,26 30,27" fill="#c4714a" opacity="0.85"/>
+  <!-- SE diagonal -->
+  <polygon points="46,44 35,32 36,34 34,33" fill="#c4714a" opacity="0.85"/>
+  <!-- Center dot -->
+  <circle cx="32" cy="30" r="2.5" fill="#2e261e"/>
+  <!-- "OSFG" text -->
+  <text x="32" y="58" font-family="serif" font-size="7" fill="#2e261e" text-anchor="middle" letter-spacing="1">OSFG</text>
+</svg>
