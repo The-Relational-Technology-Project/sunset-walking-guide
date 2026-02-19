@@ -8,6 +8,7 @@ export interface Place {
   timeLayers: TimeLayer[];
   description: string;
   thumbnail: string;
+  address?: string;
   photoCredit?: string;
   audio?: {
     url: string;

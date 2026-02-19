@@ -21,6 +21,7 @@ export function usePlaces() {
         timeLayers: (row.time_layers ?? []) as TimeLayer[],
         description: row.description,
         thumbnail: row.thumbnail,
+        address: row.address ?? undefined,
         photoCredit: row.photo_credit ?? undefined,
         audio: row.audio
           ? (row.audio as { url: string; duration: string; label: string })

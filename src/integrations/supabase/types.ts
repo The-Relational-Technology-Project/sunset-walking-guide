@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       places: {
         Row: {
+          address: string | null
           audio: Json | null
           created_at: string
           description: string
@@ -31,6 +32,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          address?: string | null
           audio?: Json | null
           created_at?: string
           description?: string
@@ -46,6 +48,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          address?: string | null
           audio?: Json | null
           created_at?: string
           description?: string
@@ -59,6 +62,30 @@ export type Database = {
           thumbnail?: string
           time_layers?: string[]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      tour_requests: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
         }
         Relationships: []
       }
