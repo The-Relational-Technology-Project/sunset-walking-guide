@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Place } from '@/data/places';
 
 interface MapViewProps {
@@ -7,11 +8,10 @@ interface MapViewProps {
   onOpenDetail: (place: Place) => void;
 }
 
-// Time layer → pin color (using CSS variables is tricky in inline SVG, so using fixed values)
 const PIN_COLORS: Record<string, string> = {
-  past: '#a07860',    // sepia / terracotta
-  present: '#3d3830', // dark charcoal
-  future: '#7a8fa6',  // slate blue
+  past: '#a07860',
+  present: '#3d3830',
+  future: '#7a8fa6',
   mixed: '#5a6670',
 };
 
@@ -27,99 +27,115 @@ function getPinStyle(place: Place): 'solid' | 'outline' | 'dashed' {
   return 'solid';
 }
 
-// Simple Mercator projection helpers for a small bounding box
-function latLngToXY(
-  lat: number, lng: number,
-  minLat: number, maxLat: number,
-  minLng: number, maxLng: number,
-  width: number, height: number
-) {
-  const x = ((lng - minLng) / (maxLng - minLng)) * width;
-  const y = ((maxLat - lat) / (maxLat - minLat)) * height;
-  return { x, y };
-}
-
 export function MapView({ places, userLat, userLng, onOpenDetail }: MapViewProps) {
-  const W = 380;
-  const H = 460;
-  const PAD = 28;
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const [leafletLoaded, setLeafletLoaded] = useState(false);
 
-  const allLats = [...places.map((p) => p.lat), userLat];
-  const allLngs = [...places.map((p) => p.lng), userLng];
-  const minLat = Math.min(...allLats) - 0.005;
-  const maxLat = Math.max(...allLats) + 0.005;
-  const minLng = Math.min(...allLngs) - 0.007;
-  const maxLng = Math.max(...allLngs) + 0.007;
+  // Load Leaflet CSS + JS dynamically
+  useEffect(() => {
+    if (document.getElementById('leaflet-css')) {
+      setLeafletLoaded(true);
+      return;
+    }
 
-  const toXY = (lat: number, lng: number) =>
-    latLngToXY(lat, lng, minLat, maxLat, minLng, maxLng, W - PAD * 2, H - PAD * 2);
+    const link = document.createElement('link');
+    link.id = 'leaflet-css';
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
 
-  const userPos = toXY(userLat, userLng);
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.onload = () => setLeafletLoaded(true);
+    document.head.appendChild(script);
+  }, []);
+
+  // Initialize map once Leaflet is loaded
+  useEffect(() => {
+    if (!leafletLoaded || !mapRef.current || mapInstanceRef.current) return;
+
+    const L = (window as any).L;
+    if (!L) return;
+
+    // Compute bounds
+    const allLats = [...places.map((p) => p.lat), userLat];
+    const allLngs = [...places.map((p) => p.lng), userLng];
+    const minLat = Math.min(...allLats);
+    const maxLat = Math.max(...allLats);
+    const minLng = Math.min(...allLngs);
+    const maxLng = Math.max(...allLngs);
+
+    const map = L.map(mapRef.current, {
+      zoomControl: true,
+      attributionControl: true,
+    });
+
+    // Fit bounds with padding
+    map.fitBounds(
+      [[minLat - 0.002, minLng - 0.003], [maxLat + 0.002, maxLng + 0.003]],
+    );
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19,
+    }).addTo(map);
+
+    // User location marker
+    const userIcon = L.divIcon({
+      className: '',
+      html: `<div style="width:20px;height:20px;position:relative;">
+        <div style="position:absolute;inset:0;border-radius:50%;background:hsl(18 35% 62%);opacity:0.15;"></div>
+        <div style="position:absolute;top:5px;left:5px;width:10px;height:10px;border-radius:50%;background:hsl(18 35% 62%);opacity:0.9;"></div>
+      </div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+    });
+    L.marker([userLat, userLng], { icon: userIcon, interactive: false }).addTo(map);
+
+    // Place markers
+    places.forEach((place) => {
+      const color = getPinColor(place);
+      const style = getPinStyle(place);
+
+      let svgCircle: string;
+      if (style === 'solid') {
+        svgCircle = `<circle cx="7" cy="7" r="6" fill="${color}" opacity="0.85"/>`;
+      } else if (style === 'outline') {
+        svgCircle = `<circle cx="7" cy="7" r="5.5" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.75"/>`;
+      } else {
+        svgCircle = `<circle cx="7" cy="7" r="5.5" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.7"/>`;
+      }
+
+      const icon = L.divIcon({
+        className: '',
+        html: `<svg width="14" height="14" viewBox="0 0 14 14">${svgCircle}</svg>`,
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
+      });
+
+      const marker = L.marker([place.lat, place.lng], { icon }).addTo(map);
+      marker.on('click', () => onOpenDetail(place));
+    });
+
+    // Apply grayscale to tiles for aesthetic consistency
+    const tilePane = mapRef.current.querySelector('.leaflet-tile-pane') as HTMLElement;
+    if (tilePane) {
+      tilePane.style.filter = 'grayscale(1) opacity(0.9)';
+    }
+
+    mapInstanceRef.current = map;
+
+    return () => {
+      map.remove();
+      mapInstanceRef.current = null;
+    };
+  }, [leafletLoaded, places, userLat, userLng, onOpenDetail]);
 
   return (
-    <div className="px-3 py-3 pb-8">
-      <div className="rounded-sm overflow-hidden border border-border bg-[hsl(var(--panel-bg))]">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          width="100%"
-          className="block"
-          style={{ background: 'hsl(var(--panel-bg))' }}
-        >
-          {/* Grid / background texture */}
-          <defs>
-            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(35 12% 86%)" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width={W} height={H} fill="url(#grid)" />
-
-          {/* User location dot */}
-          <circle
-            cx={userPos.x + PAD}
-            cy={userPos.y + PAD}
-            r={5}
-            fill="hsl(18 35% 62%)"
-            opacity={0.85}
-          />
-          <circle
-            cx={userPos.x + PAD}
-            cy={userPos.y + PAD}
-            r={10}
-            fill="hsl(18 35% 62%)"
-            opacity={0.15}
-          />
-
-          {/* Place pins */}
-          {places.map((place) => {
-            const pos = toXY(place.lat, place.lng);
-            const color = getPinColor(place);
-            const style = getPinStyle(place);
-            const cx = pos.x + PAD;
-            const cy = pos.y + PAD;
-
-            return (
-              <g
-                key={place.id}
-                onClick={() => onOpenDetail(place)}
-                className="cursor-pointer"
-                role="button"
-                aria-label={place.name}
-              >
-                {style === 'solid' && (
-                  <circle cx={cx} cy={cy} r={7} fill={color} opacity={0.85} />
-                )}
-                {style === 'outline' && (
-                  <circle cx={cx} cy={cy} r={7} fill="none" stroke={color} strokeWidth={1.5} opacity={0.75} />
-                )}
-                {style === 'dashed' && (
-                  <circle cx={cx} cy={cy} r={7} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="3 2" opacity={0.7} />
-                )}
-                {/* Hit target */}
-                <circle cx={cx} cy={cy} r={14} fill="transparent" />
-              </g>
-            );
-          })}
-        </svg>
+    <div className="px-3 py-3 pb-8 flex-1 flex flex-col">
+      <div className="rounded-sm overflow-hidden border border-border flex-1 min-h-[350px] relative">
+        <div ref={mapRef} className="w-full h-full absolute inset-0" />
       </div>
 
       {/* Legend */}
