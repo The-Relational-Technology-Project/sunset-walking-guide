@@ -34,18 +34,28 @@ export function MapView({ places, userLat, userLng, onOpenDetail }: MapViewProps
 
   // Load Leaflet CSS + JS dynamically
   useEffect(() => {
-    if (document.getElementById('leaflet-css')) {
+    // Already fully loaded
+    if ((window as any).L) {
       setLeafletLoaded(true);
       return;
     }
 
-    const link = document.createElement('link');
-    link.id = 'leaflet-css';
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    document.head.appendChild(link);
+    if (!document.getElementById('leaflet-css')) {
+      const link = document.createElement('link');
+      link.id = 'leaflet-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+
+    const existingScript = document.getElementById('leaflet-js');
+    if (existingScript) {
+      existingScript.addEventListener('load', () => setLeafletLoaded(true));
+      return;
+    }
 
     const script = document.createElement('script');
+    script.id = 'leaflet-js';
     script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
     script.onload = () => setLeafletLoaded(true);
     document.head.appendChild(script);
@@ -134,7 +144,7 @@ export function MapView({ places, userLat, userLng, onOpenDetail }: MapViewProps
 
   return (
     <div className="px-3 py-3 pb-8 flex-1 flex flex-col">
-      <div className="rounded-sm overflow-hidden border border-border flex-1 min-h-[350px] relative">
+      <div className="rounded-sm overflow-hidden border border-border flex-1 min-h-[350px] relative z-0">
         <div ref={mapRef} className="w-full h-full absolute inset-0" />
       </div>
 
