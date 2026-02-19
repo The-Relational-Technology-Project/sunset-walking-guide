@@ -61,6 +61,7 @@ export function PlacePanel({
 
   const dist = distanceKm(userLat, userLng, place.lat, place.lng);
   const walkingLine = formatWalkingLine(dist);
+  const isHere = dist < 0.16;
 
   const slideClass =
     animDir === 'left'
@@ -76,15 +77,20 @@ export function PlacePanel({
         {...handlers}
         onClick={() => onOpenDetail(place)}
         className={`
-          w-full bg-[hsl(var(--panel-bg))] border border-[hsl(var(--panel-border))]
-          rounded-sm p-5 cursor-pointer select-none
+          w-full border rounded-sm p-5 cursor-pointer select-none
           transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
+          ${isHere
+            ? 'bg-[hsl(var(--accent))]/10 border-[hsl(var(--accent))]'
+            : 'bg-[hsl(var(--panel-bg))] border-[hsl(var(--panel-border))]'}
           ${slideClass}
           active:opacity-80
         `}
       >
+        {isHere && (
+          <p className="serif text-xs italic text-accent-foreground/70 mb-3">You're here</p>
+        )}
         <div className="flex gap-5">
-          {/* Thumbnail — fixed square, same size for every card */}
+          {/* Thumbnail */}
           <div className="flex-shrink-0 w-28 h-28 rounded-sm overflow-hidden bg-muted">
             <img
               src={place.thumbnail}
@@ -99,6 +105,9 @@ export function PlacePanel({
             <h2 className="serif text-xl font-medium leading-snug text-foreground">
               {place.name}
             </h2>
+            {place.address && (
+              <p className="text-xs text-muted-foreground/70 truncate">{place.address}</p>
+            )}
             <p className="text-sm text-muted-foreground tracking-wide">{walkingLine}</p>
             <TimeIndicator layers={place.timeLayers} />
           </div>

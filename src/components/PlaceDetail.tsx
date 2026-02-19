@@ -18,6 +18,7 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
 
   const dist = distanceKm(userLat, userLng, place.lat, place.lng);
   const walkingLine = formatWalkingLine(dist);
+  const isHere = dist < 0.16;
 
   // Trap body scroll while open
   useEffect(() => {
@@ -127,9 +128,14 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
                 <h2 className="serif text-2xl font-medium leading-tight text-foreground">
                   {place.name}
                 </h2>
+                {place.address && (
+                  <p className="text-xs text-muted-foreground/70">{place.address}</p>
+                )}
                 <div className="flex items-center gap-3">
                   <TimeIndicator layers={place.timeLayers} size="md" />
-                  <span className="text-sm text-muted-foreground">{walkingLine}</span>
+                  {isHere
+                    ? <span className="serif text-sm italic text-accent-foreground/70">You're here</span>
+                    : <span className="text-sm text-muted-foreground">{walkingLine}</span>}
                 </div>
               </div>
 
