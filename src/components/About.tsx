@@ -243,55 +243,6 @@ export function About() {
         }
       </CollapsibleSection>
 
-      {/* Request a tour */}
-      <div className="border-t border-border pt-6 space-y-4">
-        <h3 className="serif text-sm font-medium text-foreground">Request a neighborhood tour</h3>
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          Want to explore the Outer Sunset with a neighbor? Drop us a note.
-        </p>
-
-        {tour.status === 'success' ?
-        <div className="py-6 text-center space-y-1">
-            <p className="serif text-sm text-foreground">Thanks for reaching out!</p>
-            <p className="text-xs text-muted-foreground">We'll be in touch soon.</p>
-          </div> :
-
-        <form onSubmit={handleTourSubmit} className="space-y-3">
-            <input
-            type="text"
-            placeholder="Name"
-            value={tourName}
-            onChange={(e) => setTourName(e.target.value)}
-            className="w-full text-sm bg-transparent border-b border-border py-2 px-0 placeholder:text-muted-foreground/50 focus:outline-none focus:border-foreground/40 transition-colors" />
-
-            <input
-            type="email"
-            placeholder="Email"
-            value={tourEmail}
-            onChange={(e) => setTourEmail(e.target.value)}
-            className="w-full text-sm bg-transparent border-b border-border py-2 px-0 placeholder:text-muted-foreground/50 focus:outline-none focus:border-foreground/40 transition-colors" />
-
-            <textarea
-            placeholder="Group size, preferred dates, what you're curious about..."
-            value={tourMessage}
-            onChange={(e) => setTourMessage(e.target.value.slice(0, 1000))}
-            rows={3}
-            className="w-full text-sm bg-transparent border-b border-border py-2 px-0 placeholder:text-muted-foreground/50 focus:outline-none focus:border-foreground/40 transition-colors resize-none" />
-
-            {tour.errorMsg &&
-          <p className="text-xs text-destructive">{tour.errorMsg}</p>
-          }
-            <button
-            type="submit"
-            disabled={tour.status === 'submitting'}
-            className="serif text-[11px] tracking-[0.15em] uppercase text-foreground/60 hover:text-foreground transition-colors py-2 disabled:opacity-40">
-
-              {tour.status === 'submitting' ? 'Sending…' : 'Send request →'}
-            </button>
-          </form>
-        }
-      </div>
-
       <div className="border-t border-border pt-6">
         <p className="text-xs text-muted-foreground/60 leading-relaxed">
           This is an early prototype. Content may be incomplete or inaccurate. Location data is used only within your browser and is never stored or transmitted.
