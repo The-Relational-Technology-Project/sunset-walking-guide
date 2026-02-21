@@ -130,7 +130,7 @@ export function About() {
       <div className="border-t border-border pt-6 space-y-2">
         <h3 className="serif text-sm font-medium text-foreground">Community credits</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Illustrated thumbnails are placeholder sketches for the prototype. Our intent is to commission a local Outer Sunset artist to create the final illustrations. Historical research informed by the Western Neighborhoods Project and the San Francisco Public Library.
+          Current thumbnails and descriptions are placeholders for this prototype. Historical research informed by the Western Neighborhoods Project and the San Francisco Public Library. We are planning to collaborate with local artists, historians, and long-time neighbors on the content for this community resource.                        
         </p>
       </div>
 
