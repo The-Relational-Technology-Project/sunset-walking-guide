@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+        }
+        Relationships: []
+      }
       places: {
         Row: {
           address: string | null
@@ -62,6 +86,33 @@ export type Database = {
           thumbnail?: string
           time_layers?: string[]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      site_suggestions: {
+        Row: {
+          created_at: string
+          details: string
+          email: string | null
+          id: string
+          name: string | null
+          time_layer: string
+        }
+        Insert: {
+          created_at?: string
+          details: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          time_layer: string
+        }
+        Update: {
+          created_at?: string
+          details?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          time_layer?: string
         }
         Relationships: []
       }
