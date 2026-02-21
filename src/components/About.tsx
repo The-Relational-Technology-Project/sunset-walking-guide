@@ -223,7 +223,7 @@ export function About() {
       {/* Request a tour */}
       <CollapsibleSection
         title="Request a neighborhood tour"
-        description="Want to explore the Outer Sunset with a neighbor who knows the stories? Drop us a note.">
+        description="Want to explore the Outer Sunset with a neighbor? Drop us a note.">
 
         {tour.status === 'success' ?
         <div className="py-6 text-center space-y-1">
@@ -247,7 +247,7 @@ export function About() {
       <div className="border-t border-border pt-6 space-y-4">
         <h3 className="serif text-sm font-medium text-foreground">Request a neighborhood tour</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Want to explore the Outer Sunset with a neighbor who knows the stories? Drop us a note.
+          Want to explore the Outer Sunset with a neighbor? Drop us a note.
         </p>
 
         {tour.status === 'success' ?
