@@ -59,6 +59,21 @@ export function PlacePanel({
   const place = places[currentIndex];
   if (!place) return null;
 
+  // Preload adjacent thumbnails for instant transitions
+  const preloadIndices = [currentIndex - 1, currentIndex + 1, currentIndex + 2];
+  preloadIndices.forEach((i) => {
+    if (i >= 0 && i < places.length && places[i]?.thumbnail) {
+      const link = document.querySelector(`link[href="${places[i].thumbnail}"]`);
+      if (!link) {
+        const prefetch = document.createElement('link');
+        prefetch.rel = 'prefetch';
+        prefetch.as = 'image';
+        prefetch.href = places[i].thumbnail;
+        document.head.appendChild(prefetch);
+      }
+    }
+  });
+
   const dist = distanceKm(userLat, userLng, place.lat, place.lng);
   const walkingLine = formatWalkingLine(dist);
   const isHere = dist < 0.16;
@@ -77,7 +92,7 @@ export function PlacePanel({
         {...handlers}
         onClick={() => onOpenDetail(place)}
         className={`
-          w-full border rounded-sm p-5 cursor-pointer select-none
+          w-full border rounded-sm p-4 cursor-pointer select-none
           transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
           ${isHere
             ? 'bg-[hsl(var(--accent))]/10 border-[hsl(var(--accent))]'
@@ -89,25 +104,25 @@ export function PlacePanel({
         {isHere && (
           <p className="serif text-xs italic text-accent-foreground/70 mb-3">You're here</p>
         )}
-        <div className="flex gap-5">
-          {/* Thumbnail */}
-          <div className="flex-shrink-0 w-28 h-28 rounded-sm overflow-hidden bg-muted">
-            <img
-              src={place.thumbnail}
-              alt={place.name}
-              className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-          </div>
+        {/* Thumbnail */}
+        <div className="w-full aspect-[16/10] rounded-sm overflow-hidden bg-muted mb-4">
+          <img
+            src={place.thumbnail}
+            alt={place.name}
+            className="w-full h-full object-cover"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
+        </div>
 
-          {/* Info */}
-          <div className="flex-1 min-w-0 space-y-2.5 py-1">
-            <h2 className="serif text-xl font-medium leading-snug text-foreground">
-              {place.name}
-            </h2>
-            {place.address && (
-              <p className="text-xs text-muted-foreground/70 truncate">{place.address}</p>
-            )}
+        {/* Info */}
+        <div className="space-y-2.5">
+          <h2 className="serif text-2xl font-medium leading-snug text-foreground">
+            {place.name}
+          </h2>
+          {place.address && (
+            <p className="text-sm text-muted-foreground/70">{place.address}</p>
+          )}
+          <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground tracking-wide">{walkingLine}</p>
             <TimeIndicator layers={place.timeLayers} />
           </div>
