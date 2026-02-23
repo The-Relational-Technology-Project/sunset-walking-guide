@@ -1,50 +1,76 @@
 
-## Three additions to the Outer Sunset Field Guide
 
-### 1. Addresses on place cards
+## Add new places, update drawings, and credit the artist
 
-**What changes:** A new `address` column is added to the database, and address text appears on the place card, the detail sheet, and the all-stops list.
+### 1. Copy uploaded drawings to the project
 
-- **Database:** Add a nullable `address` text column to the `places` table, then populate it for all 30 places with real or approximate addresses. Approximate ones use the format "Near 48th Ave & Irving St" rather than a precise street number.
-- **Place type:** Add `address?: string` to the `Place` interface in `src/data/places.ts` and map it in the `usePlaces` hook.
-- **PlacePanel card:** Show the address in small muted text below the place name (above the walking line).
-- **PlaceDetail sheet:** Show the address below the name, near the walking distance line.
-- **AllStops list:** Show the address as a second line under the place name.
+Save all 7 uploaded images to `public/thumbnails/`:
+- `black-bird-drawing.png` (Black Bird)
+- `hook-fish-drawing.png` (Hook Fish)
+- `sealevel-drawing.png` (Sealevel)
+- `ocean-beach-drawing.png` (Ocean Beach)
+- `devils-teeth.png` (Devil's Teeth)
+- `palm-city.png` (Palm City)
+- `sweet-passion.png` (Sweet Passion Bakery)
 
-### 2. "You're here" proximity highlight
+### 2. Update existing place thumbnails in the database
 
-**What changes:** When you're within roughly 0.1 miles (~0.16 km) of a place, the card gets a subtle visual treatment.
+For **Black Bird**, **Hook Fish**, and **Sealevel**, update the `thumbnail` column to point to the new drawing and set `photo_credit` to `Local Artist, Steph Chen`.
 
-- **PlacePanel:** When `dist < 0.16` km, the card border shifts to a warm accent color and a small "You're here" label appears (styled like a quiet field-guide annotation -- small serif italic text). The card background gets a very faint warm tint.
-- **AllStops list:** Rows within range get a small "You're here" badge next to the walking distance.
-- **PlaceDetail:** The walking-distance line is replaced with "You're here" when within range.
-- No new state or hooks needed -- it's a simple distance check that's already computed.
+| Place | New thumbnail | photo_credit |
+|-------|--------------|--------------|
+| black-bird | /thumbnails/black-bird-drawing.png | Local Artist, Steph Chen |
+| hook-fish | /thumbnails/hook-fish-drawing.png | Local Artist, Steph Chen |
+| sealevel-space | /thumbnails/sealevel-drawing.png | Local Artist, Steph Chen |
 
-### 3. Tour request form on the About page
+### 3. Handle Ocean Beach (secondary drawing)
 
-**What changes:** A "Request a tour" section is added at the bottom of the About page with a simple form that saves submissions to a new database table.
+Ocean Beach currently has a historical photo (`ocean-beach-rescue.jpg`, credited to outsidelands.org). The request is to add the new drawing **under** the existing photo, not replace it.
 
-- **Database:** Create a `tour_requests` table with columns: `id` (uuid, primary key), `name` (text), `email` (text), `message` (text), `created_at` (timestamptz). RLS policy allows public inserts only (no select/update/delete for anon users) so submissions are write-only from the frontend.
-- **About component:** Add a new bordered section at the bottom titled "Request a neighborhood tour." Three fields: Name, Email, Message (textarea with placeholder: "Group size, preferred dates, what you're curious about..."). A submit button styled in field-guide language (serif, understated). On success, the form is replaced with a brief thank-you message.
-- **Validation:** Client-side validation via simple required checks and email format. Message capped at 1000 characters.
+To support this, add a `drawing` field to the data model:
+- **Database migration**: Add nullable columns `drawing text` and `drawing_credit text` to the `places` table.
+- **Place type**: Add `drawing?: string` and `drawingCredit?: string` to the `Place` interface.
+- **usePlaces hook**: Map `drawing` and `drawing_credit` from the DB row.
+- **PlaceDetail component**: When `place.drawing` exists, render a second image below the main hero photo with its own credit line and lightbox support.
+- **PlacePanel card**: Continue showing only the primary `thumbnail`.
+
+Then set Ocean Beach's `drawing` to `/thumbnails/ocean-beach-drawing.png` and `drawing_credit` to `Local Artist, Steph Chen`.
+
+### 4. Add 3 new places to the database
+
+Insert new rows into the `places` table:
+
+| id | name | address | lat | lng | time_layers | thumbnail | photo_credit | sort_order |
+|----|------|---------|-----|-----|-------------|-----------|--------------|------------|
+| devils-teeth | Devil's Teeth Baking Company | 3876 Noriega St | 37.7536 | -122.5058 | {present} | /thumbnails/devils-teeth.png | Local Artist, Steph Chen | 30 |
+| palm-city | Palm City Wines | 4055 Irving St | 37.7620 | -122.5028 | {present} | /thumbnails/palm-city.png | Local Artist, Steph Chen | 31 |
+| sweet-passion | Sweet Passion Bakery | 3020 Taraval St | 37.7438 | -122.4936 | {present} | /thumbnails/sweet-passion.png | Local Artist, Steph Chen | 32 |
+
+Each will have a short description highlighting what makes the spot notable.
+
+### 5. Artist credit link on PlaceDetail
+
+When `photo_credit` (or `drawing_credit`) equals "Local Artist, Steph Chen", render the credit as a clickable link to `https://kismet-microcosm.myshopify.com/` (opening in a new tab). This way viewers can find more of Steph's art. The link styling will match the existing understated credit text (small, italic) with a subtle underline on hover.
 
 ---
 
 ### Technical details
 
-**Files created:**
-- None (all changes fit into existing files)
+**Database migration (schema change):**
+- `ALTER TABLE places ADD COLUMN drawing text;`
+- `ALTER TABLE places ADD COLUMN drawing_credit text;`
+
+**Database data updates (via insert tool):**
+- 3 `UPDATE` statements for existing places (Black Bird, Hook Fish, Sealevel thumbnails + credits)
+- 1 `UPDATE` for Ocean Beach (drawing + drawing_credit)
+- 3 `INSERT` statements for new places
 
 **Files modified:**
-- `src/data/places.ts` -- add `address` to the `Place` interface
-- `src/hooks/usePlaces.ts` -- map `address` from DB row
-- `src/components/PlacePanel.tsx` -- show address; add "You're here" highlight
-- `src/components/PlaceDetail.tsx` -- show address; "You're here" label
-- `src/components/AllStops.tsx` -- show address; "You're here" badge
-- `src/components/About.tsx` -- add tour request form section
+- `src/data/places.ts` -- add `drawing?` and `drawingCredit?` to `Place` interface
+- `src/hooks/usePlaces.ts` -- map `drawing` and `drawing_credit`
+- `src/components/PlaceDetail.tsx` -- render secondary drawing image; make Steph Chen credits link to Kismet Microcosm
 
-**Database migrations (2):**
-1. `ALTER TABLE places ADD COLUMN address text;` followed by `UPDATE` statements for all 30 places.
-2. `CREATE TABLE tour_requests (...)` with an insert-only RLS policy.
+**Files created:**
+- 7 image files in `public/thumbnails/`
 
-**No new dependencies needed** -- the form uses basic React state, and the Supabase client is already available.
+**No new dependencies required.**
