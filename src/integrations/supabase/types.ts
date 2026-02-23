@@ -44,6 +44,8 @@ export type Database = {
           audio: Json | null
           created_at: string
           description: string
+          drawing: string | null
+          drawing_credit: string | null
           id: string
           lat: number
           links: Json | null
@@ -60,6 +62,8 @@ export type Database = {
           audio?: Json | null
           created_at?: string
           description?: string
+          drawing?: string | null
+          drawing_credit?: string | null
           id: string
           lat: number
           links?: Json | null
@@ -76,6 +80,8 @@ export type Database = {
           audio?: Json | null
           created_at?: string
           description?: string
+          drawing?: string | null
+          drawing_credit?: string | null
           id?: string
           lat?: number
           links?: Json | null

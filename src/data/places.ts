@@ -19,6 +19,8 @@ export interface Place {
     label: string;
     url: string;
   }[];
+  drawing?: string;
+  drawingCredit?: string;
 }
 
 // Default center: 48th & Irving

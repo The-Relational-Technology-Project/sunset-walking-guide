@@ -29,6 +29,8 @@ export function usePlaces() {
         links: row.links
           ? (row.links as { label: string; url: string }[])
           : undefined,
+        drawing: (row as any).drawing ?? undefined,
+        drawingCredit: (row as any).drawing_credit ?? undefined,
       }));
     },
     staleTime: 5 * 60 * 1000, // 5 minutes

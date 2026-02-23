@@ -14,6 +14,8 @@ interface PlaceDetailProps {
 export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState('');
+  const [lightboxCredit, setLightboxCredit] = useState<string | undefined>();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const dist = distanceKm(userLat, userLng, place.lat, place.lng);
@@ -34,6 +36,32 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
     setIsPlaying((p) => !p);
   };
 
+  const openLightbox = (src: string, credit?: string) => {
+    setLightboxSrc(src);
+    setLightboxCredit(credit);
+    setLightboxOpen(true);
+  };
+
+  const renderCredit = (credit: string, prefix = 'Photo') => {
+    const isSteph = credit === 'Local Artist, Steph Chen';
+    const content = (
+      <>
+        {prefix}: {isSteph ? (
+          <a
+            href="https://kismet-microcosm.myshopify.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white/80 transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {credit}
+          </a>
+        ) : credit}
+      </>
+    );
+    return content;
+  };
+
   return (
     <>
       {/* Lightbox */}
@@ -50,14 +78,14 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
             <X size={22} />
           </button>
           <img
-            src={place.thumbnail}
+            src={lightboxSrc}
             alt={place.name}
             className="max-w-full max-h-full object-contain"
             onClick={(e) => e.stopPropagation()}
           />
-          {place.photoCredit && (
+          {lightboxCredit && (
             <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[11px] italic text-white/50">
-              Photo: {place.photoCredit}
+              {renderCredit(lightboxCredit)}
             </p>
           )}
         </div>
@@ -98,7 +126,7 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
               <div
                 className="w-full bg-muted overflow-hidden cursor-zoom-in"
                 style={{ aspectRatio: '4/3' }}
-                onClick={() => setLightboxOpen(true)}
+                onClick={() => openLightbox(place.thumbnail, place.photoCredit)}
               >
                 <img
                   src={place.thumbnail}
@@ -109,7 +137,7 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
               </div>
               {/* Fullscreen button */}
               <button
-                onClick={() => setLightboxOpen(true)}
+                onClick={() => openLightbox(place.thumbnail, place.photoCredit)}
                 className="absolute bottom-2 right-2 bg-background/70 backdrop-blur-sm rounded-sm p-1.5 text-foreground/60 hover:text-foreground transition-colors"
                 aria-label="View fullscreen"
               >
@@ -117,10 +145,40 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
               </button>
               {place.photoCredit && (
                 <p className="absolute bottom-2 left-3 text-[10px] italic text-white/60 drop-shadow-sm">
-                  Photo: {place.photoCredit}
+                  {renderCredit(place.photoCredit)}
                 </p>
               )}
             </div>
+
+            {/* Secondary drawing */}
+            {place.drawing && (
+              <div className="relative w-full">
+                <div
+                  className="w-full bg-muted overflow-hidden cursor-zoom-in"
+                  style={{ aspectRatio: '4/3' }}
+                  onClick={() => openLightbox(place.drawing!, place.drawingCredit)}
+                >
+                  <img
+                    src={place.drawing}
+                    alt={`${place.name} — illustration`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                </div>
+                <button
+                  onClick={() => openLightbox(place.drawing!, place.drawingCredit)}
+                  className="absolute bottom-2 right-2 bg-background/70 backdrop-blur-sm rounded-sm p-1.5 text-foreground/60 hover:text-foreground transition-colors"
+                  aria-label="View drawing fullscreen"
+                >
+                  <Maximize2 size={14} />
+                </button>
+                {place.drawingCredit && (
+                  <p className="absolute bottom-2 left-3 text-[10px] italic text-white/60 drop-shadow-sm">
+                    {renderCredit(place.drawingCredit, 'Art')}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="px-6 space-y-6">
               {/* Name + meta */}
