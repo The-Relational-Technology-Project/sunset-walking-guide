@@ -51,7 +51,7 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
             href="https://kismet-microcosm.myshopify.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-white/80 transition-colors"
+            className="underline underline-offset-2 hover:text-foreground transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
             {credit}
@@ -122,29 +122,30 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
 
           <div className="pb-10 space-y-6">
             {/* Hero image — full width */}
-            <div className="relative w-full">
-              <div
-                className="w-full bg-muted overflow-hidden cursor-zoom-in"
-                style={{ aspectRatio: '4/3' }}
-                onClick={() => openLightbox(place.thumbnail, place.photoCredit)}
-              >
-                <img
-                  src={place.thumbnail}
-                  alt={place.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                />
+            <div className="w-full">
+              <div className="relative">
+                <div
+                  className="w-full bg-muted overflow-hidden cursor-zoom-in"
+                  style={{ aspectRatio: '4/3' }}
+                  onClick={() => openLightbox(place.thumbnail, place.photoCredit)}
+                >
+                  <img
+                    src={place.thumbnail}
+                    alt={place.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                </div>
+                <button
+                  onClick={() => openLightbox(place.thumbnail, place.photoCredit)}
+                  className="absolute bottom-2 right-2 bg-background/70 backdrop-blur-sm rounded-sm p-1.5 text-foreground/60 hover:text-foreground transition-colors"
+                  aria-label="View fullscreen"
+                >
+                  <Maximize2 size={14} />
+                </button>
               </div>
-              {/* Fullscreen button */}
-              <button
-                onClick={() => openLightbox(place.thumbnail, place.photoCredit)}
-                className="absolute bottom-2 right-2 bg-background/70 backdrop-blur-sm rounded-sm p-1.5 text-foreground/60 hover:text-foreground transition-colors"
-                aria-label="View fullscreen"
-              >
-                <Maximize2 size={14} />
-              </button>
               {place.photoCredit && (
-                <p className="absolute bottom-2 left-3 text-[10px] italic text-white/60 drop-shadow-sm">
+                <p className="px-3 pt-1.5 text-[10px] italic text-muted-foreground">
                   {renderCredit(place.photoCredit)}
                 </p>
               )}
@@ -152,28 +153,30 @@ export function PlaceDetail({ place, userLat, userLng, onClose }: PlaceDetailPro
 
             {/* Secondary drawing */}
             {place.drawing && (
-              <div className="relative w-full">
-                <div
-                  className="w-full bg-muted overflow-hidden cursor-zoom-in"
-                  style={{ aspectRatio: '4/3' }}
-                  onClick={() => openLightbox(place.drawing!, place.drawingCredit)}
-                >
-                  <img
-                    src={place.drawing}
-                    alt={`${place.name} — illustration`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                  />
+              <div className="w-full">
+                <div className="relative">
+                  <div
+                    className="w-full bg-muted overflow-hidden cursor-zoom-in"
+                    style={{ aspectRatio: '4/3' }}
+                    onClick={() => openLightbox(place.drawing!, place.drawingCredit)}
+                  >
+                    <img
+                      src={place.drawing}
+                      alt={`${place.name} — illustration`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  </div>
+                  <button
+                    onClick={() => openLightbox(place.drawing!, place.drawingCredit)}
+                    className="absolute bottom-2 right-2 bg-background/70 backdrop-blur-sm rounded-sm p-1.5 text-foreground/60 hover:text-foreground transition-colors"
+                    aria-label="View drawing fullscreen"
+                  >
+                    <Maximize2 size={14} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => openLightbox(place.drawing!, place.drawingCredit)}
-                  className="absolute bottom-2 right-2 bg-background/70 backdrop-blur-sm rounded-sm p-1.5 text-foreground/60 hover:text-foreground transition-colors"
-                  aria-label="View drawing fullscreen"
-                >
-                  <Maximize2 size={14} />
-                </button>
                 {place.drawingCredit && (
-                  <p className="absolute bottom-2 left-3 text-[10px] italic text-white/60 drop-shadow-sm">
+                  <p className="px-3 pt-1.5 text-[10px] italic text-muted-foreground">
                     {renderCredit(place.drawingCredit, 'Art')}
                   </p>
                 )}
