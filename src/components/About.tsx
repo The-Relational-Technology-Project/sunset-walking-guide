@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ChevronRight } from 'lucide-react';
+import { BulletinBoard } from './BulletinBoard';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -242,6 +243,8 @@ export function About() {
           </form>
         }
       </CollapsibleSection>
+
+      <BulletinBoard />
 
       <div className="border-t border-border pt-6">
         <p className="text-xs text-muted-foreground/60 leading-relaxed">
