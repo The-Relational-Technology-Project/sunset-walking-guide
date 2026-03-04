@@ -244,6 +244,8 @@ export function About() {
         }
       </CollapsibleSection>
 
+      <BulletinBoard />
+
       <div className="border-t border-border pt-6">
         <p className="text-xs text-muted-foreground/60 leading-relaxed">
           This is an early prototype. Content may be incomplete or inaccurate. Location data is used only within your browser and is never stored or transmitted.
