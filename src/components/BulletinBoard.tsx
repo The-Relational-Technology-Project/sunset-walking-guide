@@ -124,7 +124,7 @@ export function BulletinBoard() {
     <div className="border-t border-border pt-6 space-y-4">
       <h3 className="serif text-sm font-medium text-foreground">More neighborhood tools — made by us, for us</h3>
       <div
-        className="rounded-sm p-5 pb-6"
+        className="rounded-sm p-4 pb-5"
         style={{
           backgroundColor: "hsl(35 20% 82%)",
           backgroundImage: `
