@@ -106,13 +106,13 @@ function PinnedCard({ site }: { site: SiblingSite }) {
       }}
     >
       <Pushpin position={site.pinPosition} color={site.pinColor} />
-      <p className="serif text-sm font-medium leading-snug mb-2 text-foreground">
+      <p className="serif text-[13px] font-medium leading-snug mb-1.5 text-foreground">
         {site.question}
       </p>
-      <p className="text-xs leading-tight text-foreground/75">
+      <p className="text-[11px] leading-tight text-foreground/75">
         {site.name}
       </p>
-      <p className="mt-1.5 text-[11px] font-mono text-muted-foreground">
+      <p className="mt-1 text-[10px] font-mono text-muted-foreground">
         {site.domain}
       </p>
     </a>
