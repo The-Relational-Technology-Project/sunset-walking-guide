@@ -135,7 +135,7 @@ export function BulletinBoard() {
           backgroundPosition: "0 0, 4px 4px",
         }}
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {SIBLING_SITES.map((site) => (
             <PinnedCard key={site.domain} site={site} />
           ))}
