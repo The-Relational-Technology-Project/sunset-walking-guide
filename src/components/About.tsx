@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ChevronRight } from 'lucide-react';
+import { BulletinBoard } from './BulletinBoard';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
