@@ -88,7 +88,7 @@ function PinnedCard({ site }: { site: SiblingSite }) {
       href={site.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block text-center p-5 pt-10 transition-all duration-200"
+      className="group relative block text-center p-4 pt-8 transition-all duration-200"
       style={{
         backgroundColor: site.cardBg,
         transform: `rotate(${site.rotation})`,
@@ -106,13 +106,13 @@ function PinnedCard({ site }: { site: SiblingSite }) {
       }}
     >
       <Pushpin position={site.pinPosition} color={site.pinColor} />
-      <p className="serif text-sm font-medium leading-snug mb-2 text-foreground">
+      <p className="serif text-[13px] font-medium leading-snug mb-1.5 text-foreground">
         {site.question}
       </p>
-      <p className="text-xs leading-tight text-foreground/75">
+      <p className="text-[11px] leading-tight text-foreground/75">
         {site.name}
       </p>
-      <p className="mt-1.5 text-[11px] font-mono text-muted-foreground">
+      <p className="mt-1 text-[10px] font-mono text-muted-foreground">
         {site.domain}
       </p>
     </a>
@@ -122,9 +122,9 @@ function PinnedCard({ site }: { site: SiblingSite }) {
 export function BulletinBoard() {
   return (
     <div className="border-t border-border pt-6 space-y-4">
-      <h3 className="serif text-sm font-medium text-foreground">Neighborhood projects</h3>
+      <h3 className="serif text-sm font-medium text-foreground">More neighborhood tools — made by us, for us</h3>
       <div
-        className="rounded-sm p-5 pb-6"
+        className="rounded-sm p-4 pb-5"
         style={{
           backgroundColor: "hsl(35 20% 82%)",
           backgroundImage: `
@@ -135,7 +135,7 @@ export function BulletinBoard() {
           backgroundPosition: "0 0, 4px 4px",
         }}
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {SIBLING_SITES.map((site) => (
             <PinnedCard key={site.domain} site={site} />
           ))}
