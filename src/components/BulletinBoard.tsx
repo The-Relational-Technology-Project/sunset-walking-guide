@@ -122,7 +122,7 @@ function PinnedCard({ site }: { site: SiblingSite }) {
 export function BulletinBoard() {
   return (
     <div className="border-t border-border pt-6 space-y-4">
-      <h3 className="serif text-sm font-medium text-foreground">Neighborhood projects</h3>
+      <h3 className="serif text-sm font-medium text-foreground">More neighborhood tools — made by us, for us</h3>
       <div
         className="rounded-sm p-5 pb-6"
         style={{
