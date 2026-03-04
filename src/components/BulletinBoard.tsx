@@ -88,7 +88,7 @@ function PinnedCard({ site }: { site: SiblingSite }) {
       href={site.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block text-center p-5 pt-10 transition-all duration-200"
+      className="group relative block text-center p-4 pt-8 transition-all duration-200"
       style={{
         backgroundColor: site.cardBg,
         transform: `rotate(${site.rotation})`,
